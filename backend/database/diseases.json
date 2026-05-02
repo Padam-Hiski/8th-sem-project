@@ -1,0 +1,154 @@
+{
+  "Apple___Apple_scab": {
+    "name": "Apple Scab",
+    "crop": "Apple",
+    "cause": "Fungal infection caused by Venturia inaequalis. Spreads in wet and cool weather conditions.",
+    "symptoms": "Dark olive-green spots on leaves and fruits. Leaves may curl and fall early.",
+    "treatment": [
+      "Remove and destroy infected leaves and fruits immediately.",
+      "Apply fungicide spray (Mancozeb or Captan) every 7-10 days during wet season.",
+      "Prune trees to improve air circulation.",
+      "Avoid overhead irrigation."
+    ],
+    "severity": "Medium"
+  },
+  "Apple___Black_rot": {
+    "name": "Apple Black Rot",
+    "crop": "Apple",
+    "cause": "Fungal infection caused by Botryosphaeria obtusa. Enters through wounds or dead wood.",
+    "symptoms": "Brown to black circular spots on fruits. Leaves show purple spots with brown centers.",
+    "treatment": [
+      "Prune and destroy all dead or infected branches.",
+      "Apply copper-based fungicide during early growing season.",
+      "Remove mummified fruits from trees and ground.",
+      "Keep orchard clean of plant debris."
+    ],
+    "severity": "High"
+  },
+  "Apple___Cedar_apple_rust": {
+    "name": "Cedar Apple Rust",
+    "crop": "Apple",
+    "cause": "Fungal disease caused by Gymnosporangium juniperi-virginianae requiring both apple and cedar trees.",
+    "symptoms": "Bright orange-yellow spots on upper leaf surface. Small tube-like structures on lower leaf.",
+    "treatment": [
+      "Apply fungicide (Myclobutanil) from pink bud stage through summer.",
+      "Remove nearby cedar or juniper trees if possible.",
+      "Plant rust-resistant apple varieties for future planting."
+    ],
+    "severity": "Medium"
+  },
+  "Apple___healthy": {
+    "name": "Healthy Apple",
+    "crop": "Apple",
+    "cause": "No disease detected.",
+    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain good orchard hygiene."
+    ],
+    "severity": "None"
+  },
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+    "name": "Corn Gray Leaf Spot",
+    "crop": "Corn (Maize)",
+    "cause": "Fungal disease caused by Cercospora zeae-maydis. Common in humid conditions.",
+    "symptoms": "Rectangular gray to tan lesions on leaves parallel to leaf veins.",
+    "treatment": [
+      "Plant resistant corn varieties.",
+      "Apply fungicide (Azoxystrobin) at early sign of infection.",
+      "Practice crop rotation with non-host crops.",
+      "Till crop residue after harvest to reduce fungal survival."
+    ],
+    "severity": "High"
+  },
+  "Corn_(maize)___Common_rust_": {
+    "name": "Corn Common Rust",
+    "crop": "Corn (Maize)",
+    "cause": "Fungal disease caused by Puccinia sorghi. Spreads through wind-blown spores.",
+    "symptoms": "Small oval brick-red pustules scattered on both leaf surfaces.",
+    "treatment": [
+      "Plant rust-resistant hybrid varieties.",
+      "Apply fungicide spray if infection is severe before tasseling.",
+      "Scout fields regularly during cool and humid weather.",
+      "Early planting can help avoid peak rust season."
+    ],
+    "severity": "Medium"
+  },
+  "Corn_(maize)___Northern_Leaf_Blight": {
+    "name": "Corn Northern Leaf Blight",
+    "crop": "Corn (Maize)",
+    "cause": "Fungal disease caused by Exserohilum turcicum. Favored by moderate temperatures and wet weather.",
+    "symptoms": "Long elliptical gray-green to tan lesions on leaves. Can cause significant yield loss.",
+    "treatment": [
+      "Plant resistant hybrid varieties.",
+      "Apply fungicide at early tasseling stage.",
+      "Rotate crops to break disease cycle.",
+      "Deep till infected crop residue after harvest."
+    ],
+    "severity": "High"
+  },
+  "Corn_(maize)___healthy": {
+    "name": "Healthy Corn",
+    "crop": "Corn (Maize)",
+    "cause": "No disease detected.",
+    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain proper spacing for air circulation."
+    ],
+    "severity": "None"
+  },
+  "Tomato___Bacterial_spot": {
+    "name": "Tomato Bacterial Spot",
+    "crop": "Tomato",
+    "cause": "Bacterial infection caused by Xanthomonas vesicatoria. Spreads through rain splash and infected seeds.",
+    "symptoms": "Small water-soaked spots on leaves turning brown with yellow margins. Spots on fruits appear raised and scabby.",
+    "treatment": [
+      "Use certified disease-free seeds.",
+      "Apply copper-based bactericide spray every 7 days.",
+      "Avoid overhead irrigation.",
+      "Remove and destroy infected plant material immediately."
+    ],
+    "severity": "High"
+  },
+  "Tomato___Early_blight": {
+    "name": "Tomato Early Blight",
+    "crop": "Tomato",
+    "cause": "Fungal disease caused by Alternaria solani. Common in warm and humid conditions.",
+    "symptoms": "Dark brown spots with concentric rings on older leaves. Yellow area surrounding spots.",
+    "treatment": [
+      "Remove infected lower leaves immediately.",
+      "Apply fungicide (Mancozeb or Chlorothalonil) every 7-10 days.",
+      "Mulch around plants to prevent soil splash.",
+      "Ensure proper plant spacing for air circulation."
+    ],
+    "severity": "Medium"
+  },
+  "Tomato___Late_blight": {
+    "name": "Tomato Late Blight",
+    "crop": "Tomato",
+    "cause": "Caused by Phytophthora infestans. Spreads rapidly in cool and wet conditions.",
+    "symptoms": "Large irregular dark brown patches on leaves. White mold visible on leaf undersides in humid weather.",
+    "treatment": [
+      "Apply fungicide (Metalaxyl or Mancozeb) immediately at first sign.",
+      "Remove and destroy all infected plant parts.",
+      "Avoid wetting leaves during irrigation.",
+      "Destroy crop residue after harvest completely."
+    ],
+    "severity": "Very High"
+  },
+  "Tomato___healthy": {
+    "name": "Healthy Tomato",
+    "crop": "Tomato",
+    "cause": "No disease detected.",
+    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "treatment": [
+      "Continue regular watering at soil level.",
+      "Apply balanced fertilizer as needed.",
+      "Monitor regularly for early signs of disease."
+    ],
+    "severity": "None"
+  }
+}
