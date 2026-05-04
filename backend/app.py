@@ -41,22 +41,18 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    # Check if image was sent
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
     file = request.files["image"]
 
-    # Check if file is empty
     if file.filename == "":
         return jsonify({"error": "No image selected"}), 400
 
     try:
-        # Open and prepare image
         image = Image.open(file.stream)
         prepared = prepare_image(image)
 
-        # Run prediction
         predictions = MODEL.predict(prepared)
         confidence = float(np.max(predictions))
         predicted_index = int(np.argmax(predictions))
@@ -64,11 +60,13 @@ def predict():
 
         # Confidence threshold check
         if confidence < CONFIDENCE_THRESHOLD:
-            return jsonify({
+            response = {
                 "status": "low_confidence",
                 "message": "Image is unclear. Please retake the photo in better lighting.",
                 "confidence": round(confidence * 100, 2)
-            })
+            }
+            print("RESPONSE:", json.dumps(response))
+            return jsonify(response)
 
         # Get disease info from database
         disease_info = DISEASES.get(predicted_class, {
@@ -80,16 +78,19 @@ def predict():
             "severity": "Unknown"
         })
 
-        return jsonify({
+        response = {
             "status": "success",
             "predicted_class": predicted_class,
             "confidence": round(confidence * 100, 2),
             "disease": disease_info
-        })
+        }
+        print("RESPONSE:", json.dumps(response))
+        return jsonify(response)
 
     except Exception as e:
+        print("ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
 
-# ---- RUN ----python backend\app.py
+# ---- RUN ----
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
