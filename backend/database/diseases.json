@@ -2,8 +2,14 @@
   "Apple___Apple_scab": {
     "name": "Apple Scab",
     "crop": "Apple",
+    "description": "A common fungal disease of apple trees that thrives in cool, wet spring weather. It can significantly reduce fruit quality and yield if left untreated.",
     "cause": "Fungal infection caused by Venturia inaequalis. Spreads in wet and cool weather conditions.",
-    "symptoms": "Dark olive-green spots on leaves and fruits. Leaves may curl and fall early.",
+    "symptoms": [
+      "Dark olive-green spots on leaves and fruits.",
+      "Leaves may curl and fall early.",
+      "Infected fruits develop dark, scabby lesions.",
+      "Severe infections cause premature leaf drop."
+    ],
     "treatment": [
       "Remove and destroy infected leaves and fruits immediately.",
       "Apply fungicide spray (Mancozeb or Captan) every 7-10 days during wet season.",
@@ -15,8 +21,14 @@
   "Apple___Black_rot": {
     "name": "Apple Black Rot",
     "crop": "Apple",
+    "description": "A serious fungal disease that affects fruits, leaves, and bark of apple trees. It can cause significant crop losses if not managed early.",
     "cause": "Fungal infection caused by Botryosphaeria obtusa. Enters through wounds or dead wood.",
-    "symptoms": "Brown to black circular spots on fruits. Leaves show purple spots with brown centers.",
+    "symptoms": [
+      "Brown to black circular spots on fruits.",
+      "Leaves show purple spots with brown centers.",
+      "Infected fruits shrivel and turn black.",
+      "Cankers may form on branches."
+    ],
     "treatment": [
       "Prune and destroy all dead or infected branches.",
       "Apply copper-based fungicide during early growing season.",
@@ -28,8 +40,14 @@
   "Apple___Cedar_apple_rust": {
     "name": "Cedar Apple Rust",
     "crop": "Apple",
+    "description": "A fungal disease that requires both apple and cedar/juniper trees to complete its life cycle. Common in areas where both tree types grow nearby.",
     "cause": "Fungal disease caused by Gymnosporangium juniperi-virginianae requiring both apple and cedar trees.",
-    "symptoms": "Bright orange-yellow spots on upper leaf surface. Small tube-like structures on lower leaf.",
+    "symptoms": [
+      "Bright orange-yellow spots on upper leaf surface.",
+      "Small tube-like structures on lower leaf.",
+      "Leaves may yellow and drop early.",
+      "Fruits may develop deformed areas."
+    ],
     "treatment": [
       "Apply fungicide (Myclobutanil) from pink bud stage through summer.",
       "Remove nearby cedar or juniper trees if possible.",
@@ -40,8 +58,13 @@
   "Apple___healthy": {
     "name": "Healthy Apple",
     "crop": "Apple",
+    "description": "No disease detected. The plant appears to be in good health.",
     "cause": "No disease detected.",
-    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
     "treatment": [
       "Continue regular watering and fertilization.",
       "Monitor regularly for early signs of disease.",
@@ -52,8 +75,14 @@
   "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
     "name": "Corn Gray Leaf Spot",
     "crop": "Corn (Maize)",
+    "description": "One of the most significant fungal diseases of corn worldwide. It thrives in warm, humid conditions and can cause severe yield loss.",
     "cause": "Fungal disease caused by Cercospora zeae-maydis. Common in humid conditions.",
-    "symptoms": "Rectangular gray to tan lesions on leaves parallel to leaf veins.",
+    "symptoms": [
+      "Rectangular gray to tan lesions on leaves.",
+      "Lesions run parallel to leaf veins.",
+      "Lesions may merge causing large dead areas.",
+      "Severe infection leads to premature plant death."
+    ],
     "treatment": [
       "Plant resistant corn varieties.",
       "Apply fungicide (Azoxystrobin) at early sign of infection.",
@@ -66,7 +95,13 @@
     "name": "Corn Common Rust",
     "crop": "Corn (Maize)",
     "cause": "Fungal disease caused by Puccinia sorghi. Spreads through wind-blown spores.",
-    "symptoms": "Small oval brick-red pustules scattered on both leaf surfaces.",
+    "description": "A widespread fungal disease that spreads rapidly through wind-blown spores. Most damaging during cool, moist weather conditions.",
+    "symptoms": [
+      "Small oval brick-red pustules scattered on both leaf surfaces.",
+      "Pustules may turn dark brown as they mature.",
+      "Heavily infected leaves turn yellow and die.",
+      "Infection is more severe on young plants."
+    ],
     "treatment": [
       "Plant rust-resistant hybrid varieties.",
       "Apply fungicide spray if infection is severe before tasseling.",
@@ -78,8 +113,14 @@
   "Corn_(maize)___Northern_Leaf_Blight": {
     "name": "Corn Northern Leaf Blight",
     "crop": "Corn (Maize)",
+    "description": "A serious foliar disease of corn that can cause yield losses of 30-50% in severe cases. Spreads quickly under moderate temperatures and wet conditions.",
     "cause": "Fungal disease caused by Exserohilum turcicum. Favored by moderate temperatures and wet weather.",
-    "symptoms": "Long elliptical gray-green to tan lesions on leaves. Can cause significant yield loss.",
+    "symptoms": [
+      "Long elliptical gray-green to tan lesions on leaves.",
+      "Lesions can reach 2.5 to 15 cm in length.",
+      "Lesions may have dark borders.",
+      "Severe infection causes significant yield loss."
+    ],
     "treatment": [
       "Plant resistant hybrid varieties.",
       "Apply fungicide at early tasseling stage.",
@@ -91,8 +132,13 @@
   "Corn_(maize)___healthy": {
     "name": "Healthy Corn",
     "crop": "Corn (Maize)",
+    "description": "No disease detected. The plant appears to be in good health.",
     "cause": "No disease detected.",
-    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No lesions, spots, or discoloration visible."
+    ],
     "treatment": [
       "Continue regular watering and fertilization.",
       "Monitor regularly for early signs of disease.",
@@ -103,8 +149,14 @@
   "Tomato___Bacterial_spot": {
     "name": "Tomato Bacterial Spot",
     "crop": "Tomato",
+    "description": "A highly destructive bacterial disease affecting tomato leaves, stems, and fruits. It spreads rapidly under warm, wet conditions and can devastate crops.",
     "cause": "Bacterial infection caused by Xanthomonas vesicatoria. Spreads through rain splash and infected seeds.",
-    "symptoms": "Small water-soaked spots on leaves turning brown with yellow margins. Spots on fruits appear raised and scabby.",
+    "symptoms": [
+      "Small water-soaked spots on leaves turning brown with yellow margins.",
+      "Spots on fruits appear raised and scabby.",
+      "Infected leaves may drop prematurely.",
+      "Stem lesions may appear dark and water-soaked."
+    ],
     "treatment": [
       "Use certified disease-free seeds.",
       "Apply copper-based bactericide spray every 7 days.",
@@ -116,8 +168,14 @@
   "Tomato___Early_blight": {
     "name": "Tomato Early Blight",
     "crop": "Tomato",
+    "description": "One of the most common tomato diseases worldwide. It typically starts on older lower leaves and moves upward. Warm humid conditions accelerate its spread.",
     "cause": "Fungal disease caused by Alternaria solani. Common in warm and humid conditions.",
-    "symptoms": "Dark brown spots with concentric rings on older leaves. Yellow area surrounding spots.",
+    "symptoms": [
+      "Dark brown spots with concentric rings on older leaves.",
+      "Yellow area surrounding spots.",
+      "Infected leaves turn yellow and drop.",
+      "Dark lesions may also appear on stems and fruits."
+    ],
     "treatment": [
       "Remove infected lower leaves immediately.",
       "Apply fungicide (Mancozeb or Chlorothalonil) every 7-10 days.",
@@ -129,8 +187,14 @@
   "Tomato___Late_blight": {
     "name": "Tomato Late Blight",
     "crop": "Tomato",
+    "description": "One of the most devastating tomato diseases, responsible for the Irish Potato Famine. Spreads extremely rapidly in cool, wet weather and can destroy an entire crop within days.",
     "cause": "Caused by Phytophthora infestans. Spreads rapidly in cool and wet conditions.",
-    "symptoms": "Large irregular dark brown patches on leaves. White mold visible on leaf undersides in humid weather.",
+    "symptoms": [
+      "Large irregular dark brown patches on leaves.",
+      "White mold visible on leaf undersides in humid weather.",
+      "Infected fruits develop firm dark brown lesions.",
+      "Plants may collapse entirely within days in severe cases."
+    ],
     "treatment": [
       "Apply fungicide (Metalaxyl or Mancozeb) immediately at first sign.",
       "Remove and destroy all infected plant parts.",
@@ -142,8 +206,13 @@
   "Tomato___healthy": {
     "name": "Healthy Tomato",
     "crop": "Tomato",
+    "description": "No disease detected. The plant appears to be in good health.",
     "cause": "No disease detected.",
-    "symptoms": "Plant appears healthy with no visible disease symptoms.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
     "treatment": [
       "Continue regular watering at soil level.",
       "Apply balanced fertilizer as needed.",

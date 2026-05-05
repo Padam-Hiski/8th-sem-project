@@ -6,7 +6,6 @@ function Result() {
   const location = useLocation();
   const { result, preview } = location.state || {};
 
-  // If someone visits /result directly without data
   if (!result) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-center px-6">
@@ -23,18 +22,8 @@ function Result() {
     );
   }
 
-  const { predicted_class, confidence, disease: disease_info, low_confidence } = result;
-  const isLowConfidence = result.status === 'low_confidence';
-  const confidencePercent = (confidence * 100).toFixed(1);
-
-  // Confidence bar color
-  const barColor =
-    confidence >= 0.85 ? 'bg-green-500' :
-    confidence >= 0.60 ? 'bg-yellow-400' :
-    'bg-red-400';
-
-  // If low confidence
-  if (low_confidence) {
+  // ---- LOW CONFIDENCE SCREEN ----
+  if (result.status === 'low_confidence') {
     return (
       <div className="min-h-screen bg-gradient-to-b from-green-50 to-white px-6 py-12">
         <button
@@ -47,7 +36,7 @@ function Result() {
           <div className="text-6xl mb-4">🤔</div>
           <h2 className="text-2xl font-bold text-gray-700 mb-3">Could Not Identify</h2>
           <p className="text-gray-500 text-sm mb-6">
-            The model's confidence was too low ({confidencePercent}%) to make a reliable prediction.
+            The model's confidence was too low ({result.confidence}%) to make a reliable prediction.
             Please retake the photo with better lighting and focus on the affected leaf area.
           </p>
           {preview && (
@@ -73,10 +62,21 @@ function Result() {
     );
   }
 
+  // ---- SUCCESS SCREEN ----
+  const { predicted_class, confidence, disease } = result;
+
+  // confidence is already a percentage from backend (e.g. 94.22)
+  const confidencePercent = parseFloat(confidence).toFixed(1);
+  const confidenceRaw = confidence / 100; // convert back for bar width
+
+  const barColor =
+    confidenceRaw >= 0.85 ? 'bg-green-500' :
+    confidenceRaw >= 0.60 ? 'bg-yellow-400' :
+    'bg-red-400';
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white px-6 py-12">
 
-      {/* Back button */}
       <button
         onClick={() => navigate('/upload')}
         className="text-green-600 hover:text-green-800 text-sm mb-8 inline-block"
@@ -102,10 +102,10 @@ function Result() {
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 text-center border border-green-100">
           <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Detected Disease</p>
           <h2 className="text-2xl font-extrabold text-green-800">
-            {disease_info?.name || predicted_class}
+            {disease?.name || predicted_class?.replace(/_/g, ' ')}
           </h2>
-          {disease_info?.crop && (
-            <p className="text-gray-500 text-sm mt-1">Crop: {disease_info.crop}</p>
+          {disease?.crop && (
+            <p className="text-gray-500 text-sm mt-1">Crop: {disease.crop}</p>
           )}
         </div>
 
@@ -122,29 +122,27 @@ function Result() {
             />
           </div>
           <p className="text-xs text-gray-400 mt-2">
-            {confidence >= 0.85 ? '✅ High confidence result' :
-             confidence >= 0.60 ? '⚠️ Moderate confidence — verify manually' :
+            {confidenceRaw >= 0.85 ? '✅ High confidence result' :
+             confidenceRaw >= 0.60 ? '⚠️ Moderate confidence — verify manually' :
              '❌ Low confidence'}
           </p>
         </div>
 
         {/* Disease Info */}
-        {disease_info && (
+        {disease && (
           <>
-            {/* Description */}
-            {disease_info.description && (
+            {disease.description && (
               <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100">
                 <h3 className="text-green-800 font-semibold mb-2">📋 About this Disease</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{disease_info.description}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{disease.description}</p>
               </div>
             )}
-
-            {/* Symptoms */}
-            {disease_info.symptoms && disease_info.symptoms.length > 0 && (
+             {/* symptoms */}
+            {disease.symptoms && Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100">
                 <h3 className="text-green-800 font-semibold mb-3">🔍 Symptoms</h3>
                 <ul className="space-y-1">
-                  {disease_info.symptoms.map((s, i) => (
+                  {disease.symptoms.map((s, i) => (
                     <li key={i} className="text-gray-600 text-sm flex items-start gap-2">
                       <span className="text-green-400 mt-0.5">•</span> {s}
                     </li>
@@ -153,12 +151,11 @@ function Result() {
               </div>
             )}
 
-            {/* Treatment */}
-            {disease_info.treatment && disease_info.treatment.length > 0 && (
+            {disease.treatment && Array.isArray(disease.treatment) && disease.treatment.length > 0 && (
               <div className="bg-green-50 rounded-2xl shadow-sm p-6 mb-4 border border-green-200">
                 <h3 className="text-green-800 font-semibold mb-3">💊 Recommended Treatment</h3>
                 <ul className="space-y-1">
-                  {disease_info.treatment.map((t, i) => (
+                  {disease.treatment.map((t, i) => (
                     <li key={i} className="text-green-700 text-sm flex items-start gap-2">
                       <span className="mt-0.5">✓</span> {t}
                     </li>
@@ -167,16 +164,15 @@ function Result() {
               </div>
             )}
 
-            {/* Severity */}
-            {disease_info.severity && (
+            {disease.severity && (
               <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100 flex items-center justify-between">
                 <span className="text-gray-600 font-medium text-sm">Severity Level</span>
                 <span className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  disease_info.severity === 'High' ? 'bg-red-100 text-red-600' :
-                  disease_info.severity === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                  disease.severity === 'High' ? 'bg-red-100 text-red-600' :
+                  disease.severity === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
                   'bg-green-100 text-green-700'
                 }`}>
-                  {disease_info.severity}
+                  {disease.severity}
                 </span>
               </div>
             )}
