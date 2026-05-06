@@ -86,9 +86,14 @@ reader.readAsDataURL(file);
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       navigate('/result', { state: { result: response.data, preview } });
-    } catch {
+    }
+     catch (err) {
+      console.error('Full error:', err);
+      console.error('Response:', err.response);
+      console.error('Status:', err.response?.status);
       setError(t.errorBackend);
-    } finally {
+    } 
+     finally {
       setLoading(false);
     }
   };
