@@ -76,6 +76,8 @@ reader.readAsDataURL(file);
   const handleDrop = (e) => { e.preventDefault(); processFile(e.dataTransfer.files[0]); };
 
   const handleSubmit = async () => {
+    console.log('Submit clicked, image:', image); // ADD THIS
+    console.log('Image type:', typeof image, image instanceof File);
     if (!image) { setError(t.errorNoImage); return; }
     setLoading(true);
     setError(null);
