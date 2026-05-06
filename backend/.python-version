@@ -1,2 +1,1 @@
-# Create the file
-echo 3.11.0 > D:\proj\CDD\backend\.python-version
+echo python-3.11.0
