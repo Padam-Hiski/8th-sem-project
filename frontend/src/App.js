@@ -1,4 +1,5 @@
 import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './AppContext';
 import Home from './pages/Home';
@@ -6,6 +7,11 @@ import Upload from './pages/Upload';
 import Result from './pages/Result';
 
 function App() {
+  // Add this inside App() function, before the return:
+useEffect(() => {
+  fetch('https://eightth-sem-project-whe8.onrender.com/')
+    .catch(() => {}); // silently wake up render
+}, []);
   return (
     <AppProvider>
       <Router>
