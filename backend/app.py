@@ -83,10 +83,9 @@ def predict():
             "predicted_class": predicted_class,
             "confidence": round(confidence * 100, 2),
             "disease": disease_info
-        }
-        print("RESPONSE:", json.dumps(response))
+        } 
         return jsonify(response)
-
+        
     except Exception as e:
         print("ERROR:", str(e))
         return jsonify({"error": str(e)}), 500

@@ -1,130 +1,167 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useApp } from '../AppContext';
+
+const text = {
+  en: {
+    back: '← Analyze Another',
+    noResult: 'No result found',
+    noResultSub: 'Please upload a leaf image first.',
+    goUpload: 'Go to Upload',
+    title: 'Detection Result',
+    subtitle: 'Analysis complete',
+    detected: 'Detected Disease',
+    crop: 'Crop',
+    confidence: 'Model Confidence',
+    highConf: '✅ High confidence result',
+    modConf: '⚠️ Moderate confidence — verify manually',
+    lowConf: '❌ Low confidence',
+    about: '📋 About this Disease',
+    symptoms: '🔍 Symptoms',
+    treatment: '💊 Recommended Treatment',
+    severity: 'Severity Level',
+    disclaimer: '⚠️ This result is AI-generated and should be used as a reference only. Always consult an agricultural expert for final diagnosis.',
+    analyzeAnother: '🔄 Analyze Another',
+    home: '🏠 Home',
+    lowConfTitle: 'Could Not Identify',
+    lowConfMsg: "The model's confidence was too low",
+    lowConfSub: 'to make a reliable prediction. Please retake the photo with better lighting and focus on the affected leaf area.',
+    tipsTitle: '💡 Try these improvements:',
+    tips: ['Use natural daylight', 'Get closer to the leaf', 'Make sure the image is not blurry', 'Focus on the most affected part'],
+    retake: '📷 Retake Photo',
+    tryAnother: '← Try Another Photo',
+  },
+  np: {
+    back: '← अर्को विश्लेषण गर्नुहोस्',
+    noResult: 'कुनै नतिजा फेला परेन',
+    noResultSub: 'कृपया पहिले पातको छवि अपलोड गर्नुहोस्।',
+    goUpload: 'अपलोडमा जानुहोस्',
+    title: 'पहिचान नतिजा',
+    subtitle: 'विश्लेषण सम्पन्न',
+    detected: 'पत्ता लागेको रोग',
+    crop: 'बाली',
+    confidence: 'मोडल कन्फिडेन्स',
+    highConf: '✅ उच्च कन्फिडेन्स नतिजा',
+    modConf: '⚠️ मध्यम कन्फिडेन्स — म्यानुअल जाँच गर्नुहोस्',
+    lowConf: '❌ कम कन्फिडेन्स',
+    about: '📋 यो रोगको बारेमा',
+    symptoms: '🔍 लक्षणहरू',
+    treatment: '💊 सिफारिश उपचार',
+    severity: 'गम्भीरता स्तर',
+    disclaimer: '⚠️ यो नतिजा AI-निर्मित हो र केवल सन्दर्भको रूपमा प्रयोग गर्नुपर्छ। अन्तिम निदानको लागि सधैँ कृषि विशेषज्ञसँग सल्लाह लिनुहोस्।',
+    analyzeAnother: '🔄 अर्को विश्लेषण',
+    home: '🏠 गृहपृष्ठ',
+    lowConfTitle: 'पहिचान गर्न सकिएन',
+    lowConfMsg: 'मोडलको कन्फिडेन्स धेरै कम थियो',
+    lowConfSub: 'विश्वसनीय अनुमान गर्न। राम्रो प्रकाश र फोकससहित फोटो पुन: खिच्नुहोस्।',
+    tipsTitle: '💡 यी सुधारहरू प्रयास गर्नुहोस्:',
+    tips: ['प्राकृतिक दिवालोक प्रयोग गर्नुहोस्', 'पातको नजिक जानुहोस्', 'छवि धमिलो नभएको सुनिश्चित गर्नुहोस्', 'सबैभन्दा प्रभावित भागमा फोकस गर्नुहोस्'],
+    retake: '📷 फोटो पुन: खिच्नुहोस्',
+    tryAnother: '← अर्को फोटो प्रयास गर्नुहोस्',
+  },
+};
 
 function Result() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { darkMode, toggleDark, language, toggleLang } = useApp();
+  const t = text[language];
+  const dark = darkMode;
+
   const { result, preview } = location.state || {};
+
+  const TopBar = () => (
+    <div className="flex justify-end gap-2 mb-6">
+      <button onClick={toggleLang} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
+        {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
+      </button>
+      <button onClick={toggleDark} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
+        {dark ? '☀️ Light' : '🌙 Dark'}
+      </button>
+    </div>
+  );
 
   if (!result) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-center px-6">
+      <div className={`min-h-screen flex flex-col items-center justify-center text-center px-6 ${dark ? 'bg-gray-900 text-white' : ''}`}>
         <div className="text-5xl mb-4">⚠️</div>
-        <h2 className="text-xl font-bold text-gray-700 mb-2">No result found</h2>
-        <p className="text-gray-400 text-sm mb-6">Please upload a leaf image first.</p>
-        <button
-          onClick={() => navigate('/upload')}
-          className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition"
-        >
-          Go to Upload
+        <h2 className={`text-xl font-bold mb-2 ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{t.noResult}</h2>
+        <p className={`text-sm mb-6 ${dark ? 'text-gray-400' : 'text-gray-400'}`}>{t.noResultSub}</p>
+        <button onClick={() => navigate('/upload')} className="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition">
+          {t.goUpload}
         </button>
       </div>
     );
   }
 
-  // ---- LOW CONFIDENCE SCREEN ----
   if (result.status === 'low_confidence') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white px-6 py-12">
-        <button
-          onClick={() => navigate('/upload')}
-          className="text-green-600 hover:text-green-800 text-sm mb-8 inline-block"
-        >
-          ← Try Another Photo
+      <div className={`min-h-screen px-6 py-12 transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white'}`}>
+        <TopBar />
+        <button onClick={() => navigate('/upload')} className={`text-sm mb-8 inline-block ${dark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}>
+          {t.tryAnother}
         </button>
         <div className="max-w-xl mx-auto text-center">
           <div className="text-6xl mb-4">🤔</div>
-          <h2 className="text-2xl font-bold text-gray-700 mb-3">Could Not Identify</h2>
-          <p className="text-gray-500 text-sm mb-6">
-            The model's confidence was too low ({result.confidence}%) to make a reliable prediction.
-            Please retake the photo with better lighting and focus on the affected leaf area.
+          <h2 className={`text-2xl font-bold mb-3 ${dark ? 'text-gray-200' : 'text-gray-700'}`}>{t.lowConfTitle}</h2>
+          <p className={`text-sm mb-6 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
+            {t.lowConfMsg} ({result.confidence}%) {t.lowConfSub}
           </p>
-          {preview && (
-            <img src={preview} alt="Uploaded" className="max-h-48 mx-auto rounded-xl mb-6 object-contain" />
-          )}
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-5 py-4 text-left mb-6">
-            <p className="text-yellow-800 font-semibold text-sm mb-2">💡 Try these improvements:</p>
-            <ul className="text-yellow-700 text-xs space-y-1 list-disc list-inside">
-              <li>Use natural daylight</li>
-              <li>Get closer to the leaf</li>
-              <li>Make sure the image is not blurry</li>
-              <li>Focus on the most affected part</li>
+          {preview && <img src={preview} alt="Uploaded" className="max-h-48 mx-auto rounded-xl mb-6 object-contain" />}
+          <div className={`border rounded-xl px-5 py-4 text-left mb-6 ${dark ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-200'}`}>
+            <p className={`font-semibold text-sm mb-2 ${dark ? 'text-yellow-300' : 'text-yellow-800'}`}>{t.tipsTitle}</p>
+            <ul className={`text-xs space-y-1 list-disc list-inside ${dark ? 'text-yellow-400' : 'text-yellow-700'}`}>
+              {t.tips.map((tip, i) => <li key={i}>{tip}</li>)}
             </ul>
           </div>
-          <button
-            onClick={() => navigate('/upload')}
-            className="w-full bg-green-600 text-white font-semibold py-4 rounded-2xl hover:bg-green-700 transition"
-          >
-            📷 Retake Photo
+          <button onClick={() => navigate('/upload')} className="w-full bg-green-600 text-white font-semibold py-4 rounded-2xl hover:bg-green-700 transition">
+            {t.retake}
           </button>
         </div>
       </div>
     );
   }
 
-  // ---- SUCCESS SCREEN ----
+  // SUCCESS
   const { predicted_class, confidence, disease } = result;
-
-  // confidence is already a percentage from backend (e.g. 94.22)
   const confidencePercent = parseFloat(confidence).toFixed(1);
-  const confidenceRaw = confidence / 100; // convert back for bar width
-
-  const barColor =
-    confidenceRaw >= 0.85 ? 'bg-green-500' :
-    confidenceRaw >= 0.60 ? 'bg-yellow-400' :
-    'bg-red-400';
+  const confidenceRaw = confidence / 100;
+  const barColor = confidenceRaw >= 0.85 ? 'bg-green-500' : confidenceRaw >= 0.60 ? 'bg-yellow-400' : 'bg-red-400';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white px-6 py-12">
+    <div className={`min-h-screen px-6 py-12 transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white'}`}>
+      <TopBar />
 
-      <button
-        onClick={() => navigate('/upload')}
-        className="text-green-600 hover:text-green-800 text-sm mb-8 inline-block"
-      >
-        ← Analyze Another
+      <button onClick={() => navigate('/upload')} className={`text-sm mb-8 inline-block ${dark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}>
+        {t.back}
       </button>
 
       <div className="max-w-xl mx-auto">
+        <h1 className={`text-3xl font-bold mb-1 text-center ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.title}</h1>
+        <p className={`text-sm text-center mb-8 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.subtitle}</p>
 
-        <h1 className="text-3xl font-bold text-green-800 mb-1 text-center">Detection Result</h1>
-        <p className="text-gray-400 text-sm text-center mb-8">Analysis complete</p>
-
-        {/* Uploaded Image */}
-        {preview && (
-          <img
-            src={preview}
-            alt="Analyzed leaf"
-            className="w-full max-h-56 object-contain rounded-2xl shadow mb-6"
-          />
-        )}
+        {preview && <img src={preview} alt="Analyzed leaf" className="w-full max-h-56 object-contain rounded-2xl shadow mb-6" />}
 
         {/* Disease Name */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 text-center border border-green-100">
-          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Detected Disease</p>
-          <h2 className="text-2xl font-extrabold text-green-800">
+        <div className={`rounded-2xl shadow-sm p-6 mb-4 text-center border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
+          <p className={`text-xs uppercase tracking-widest mb-1 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.detected}</p>
+          <h2 className={`text-2xl font-extrabold ${dark ? 'text-green-400' : 'text-green-800'}`}>
             {disease?.name || predicted_class?.replace(/_/g, ' ')}
           </h2>
-          {disease?.crop && (
-            <p className="text-gray-500 text-sm mt-1">Crop: {disease.crop}</p>
-          )}
+          {disease?.crop && <p className={`text-sm mt-1 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.crop}: {disease.crop}</p>}
         </div>
 
         {/* Confidence Bar */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100">
+        <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-500 font-medium">Model Confidence</span>
-            <span className="font-bold text-green-700">{confidencePercent}%</span>
+            <span className={`font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.confidence}</span>
+            <span className={`font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>{confidencePercent}%</span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-3">
-            <div
-              className={`${barColor} h-3 rounded-full transition-all duration-500`}
-              style={{ width: `${confidencePercent}%` }}
-            />
+          <div className={`w-full rounded-full h-3 ${dark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <div className={`${barColor} h-3 rounded-full transition-all duration-500`} style={{ width: `${confidencePercent}%` }} />
           </div>
-          <p className="text-xs text-gray-400 mt-2">
-            {confidenceRaw >= 0.85 ? '✅ High confidence result' :
-             confidenceRaw >= 0.60 ? '⚠️ Moderate confidence — verify manually' :
-             '❌ Low confidence'}
+          <p className={`text-xs mt-2 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
+            {confidenceRaw >= 0.85 ? t.highConf : confidenceRaw >= 0.60 ? t.modConf : t.lowConf}
           </p>
         </div>
 
@@ -132,41 +169,38 @@ function Result() {
         {disease && (
           <>
             {disease.description && (
-              <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100">
-                <h3 className="text-green-800 font-semibold mb-2">📋 About this Disease</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{disease.description}</p>
+              <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
+                <h3 className={`font-semibold mb-2 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.about}</h3>
+                <p className={`text-sm leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{disease.description}</p>
               </div>
             )}
-             {/* symptoms */}
-            {disease.symptoms && Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100">
-                <h3 className="text-green-800 font-semibold mb-3">🔍 Symptoms</h3>
+           {Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
+              <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
+                <h3 className={`font-semibold mb-3 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.symptoms}</h3>
                 <ul className="space-y-1">
                   {disease.symptoms.map((s, i) => (
-                    <li key={i} className="text-gray-600 text-sm flex items-start gap-2">
+                    <li key={i} className={`text-sm flex items-start gap-2 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
                       <span className="text-green-400 mt-0.5">•</span> {s}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-
-            {disease.treatment && Array.isArray(disease.treatment) && disease.treatment.length > 0 && (
-              <div className="bg-green-50 rounded-2xl shadow-sm p-6 mb-4 border border-green-200">
-                <h3 className="text-green-800 font-semibold mb-3">💊 Recommended Treatment</h3>
+            {Array.isArray(disease.treatment) && disease.treatment.length > 0 && (
+              <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'}`}>
+                <h3 className={`font-semibold mb-3 ${dark ? 'text-green-300' : 'text-green-800'}`}>{t.treatment}</h3>
                 <ul className="space-y-1">
-                  {disease.treatment.map((t, i) => (
-                    <li key={i} className="text-green-700 text-sm flex items-start gap-2">
-                      <span className="mt-0.5">✓</span> {t}
+                  {disease.treatment.map((t_item, i) => (
+                    <li key={i} className={`text-sm flex items-start gap-2 ${dark ? 'text-green-300' : 'text-green-700'}`}>
+                      <span className="mt-0.5">✓</span> {t_item}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-
             {disease.severity && (
-              <div className="bg-white rounded-2xl shadow-sm p-6 mb-4 border border-green-100 flex items-center justify-between">
-                <span className="text-gray-600 font-medium text-sm">Severity Level</span>
+              <div className={`rounded-2xl shadow-sm p-6 mb-4 border flex items-center justify-between ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
+                <span className={`font-medium text-sm ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.severity}</span>
                 <span className={`text-sm font-bold px-3 py-1 rounded-full ${
                   disease.severity === 'High' ? 'bg-red-100 text-red-600' :
                   disease.severity === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
@@ -180,29 +214,19 @@ function Result() {
         )}
 
         {/* Disclaimer */}
-        <div className="bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 mb-6">
-          <p className="text-gray-400 text-xs text-center">
-            ⚠️ This result is AI-generated and should be used as a reference only.
-            Always consult an agricultural expert for final diagnosis.
-          </p>
+        <div className={`border rounded-xl px-5 py-4 mb-6 ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+          <p className={`text-xs text-center ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.disclaimer}</p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <button
-            onClick={() => navigate('/upload')}
-            className="flex-1 border border-green-400 text-green-700 font-medium py-3 rounded-xl hover:bg-green-50 transition text-sm"
-          >
-            🔄 Analyze Another
+          <button onClick={() => navigate('/upload')} className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}>
+            {t.analyzeAnother}
           </button>
-          <button
-            onClick={() => navigate('/')}
-            className="flex-1 bg-green-600 text-white font-medium py-3 rounded-xl hover:bg-green-700 transition text-sm"
-          >
-            🏠 Home
+          <button onClick={() => navigate('/')} className="flex-1 bg-green-600 text-white font-medium py-3 rounded-xl hover:bg-green-700 transition text-sm">
+            {t.home}
           </button>
         </div>
-
       </div>
     </div>
   );

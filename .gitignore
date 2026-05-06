@@ -8,7 +8,7 @@ venv/
 __pycache__/
 *.pyc
 *.pyo
-*.h5
+
 
 # Dataset (too large for GitHub)
 dataset/
