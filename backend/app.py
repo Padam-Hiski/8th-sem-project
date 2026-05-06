@@ -8,7 +8,7 @@ import tensorflow as tf
 
 # ---- SETUP ----
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://8th-sem-project.vercel.app", "http://localhost:3000"])
 
 # ---- LOAD CLASS NAMES ----
 with open("classes.json", "r") as f:
