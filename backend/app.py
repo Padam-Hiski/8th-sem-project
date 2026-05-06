@@ -11,16 +11,16 @@ app = Flask(__name__)
 CORS(app)
 
 # ---- LOAD CLASS NAMES ----
-with open("backend/classes.json", "r") as f:
+with open("classes.json", "r") as f:
     CLASSES = json.load(f)
 
 # ---- LOAD DISEASE DATABASE ----
-with open("backend/database/diseases.json", "r") as f:
+with open("database/diseases.json", "r") as f:
     DISEASES = json.load(f)
 
 # ---- LOAD MODEL ----
 print("Loading model...")
-MODEL = tf.keras.models.load_model("backend/model/crop_disease_model.h5")
+MODEL = tf.keras.models.load_model("model/crop_disease_model.h5")
 print("Model loaded successfully!")
 
 # ---- CONFIDENCE THRESHOLD ----
