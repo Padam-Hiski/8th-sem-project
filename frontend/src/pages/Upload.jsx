@@ -172,12 +172,22 @@ reader.readAsDataURL(file);
         </div>
 
         <button
-          onClick={handleSubmit}
-          disabled={!image || loading}
-          className="mt-8 w-full bg-green-600 hover:bg-green-700 disabled:bg-green-900 disabled:text-green-600 text-white text-lg font-semibold py-4 rounded-2xl shadow transition duration-200"
-        >
-          {loading ? t.analyzing : t.analyze}
-        </button>
+  onClick={handleSubmit}
+  disabled={!image || loading}
+  className="mt-8 w-full bg-green-600 hover:bg-green-700 disabled:bg-green-900 disabled:text-green-600 text-white text-lg font-semibold py-4 rounded-2xl shadow transition duration-200"
+>
+  {loading ? (
+    <span className="flex items-center justify-center gap-3">
+      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+      {t.analyzing}
+    </span>
+  ) : (
+    t.analyze
+  )}
+</button>
       </div>
     </div>
   );
