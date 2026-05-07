@@ -84,7 +84,7 @@ reader.readAsDataURL(file);
     const formData = new FormData();
     formData.append('image', image);
     try {
-      const response = await axios.post('8th-sem-project-production.up.railway.app/predict', formData, {
+      const response = await axios.post('https://8th-sem-project-production.up.railway.app/predict', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       navigate('/result', { state: { result: response.data, preview } });
