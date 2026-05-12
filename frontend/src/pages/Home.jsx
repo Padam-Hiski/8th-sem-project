@@ -14,6 +14,7 @@ const crops = [
   { emoji: '🥔', name: 'Potato', nameNp: 'आलु' },
   { emoji: '🍓', name: 'Strawberry', nameNp: 'स्ट्रबेरी' },
   { emoji: '🎃', name: 'Squash', nameNp: 'फर्सी' },
+  { emoji: '🌾', name: 'Rice', nameNp: 'धान' },
 ];
 
 const steps = {
@@ -33,11 +34,11 @@ const text = {
   en: {
     title: 'Crop Disease Detector',
     subtitle: 'An AI-powered tool that detects diseases in crop leaves from a single photo. Built to help farmers and agricultural workers identify problems early and take action fast.',
-    stats: 'Trained on 54,305 images · 38 disease classes · 94.22% accuracy',
+    stats: 'Trained on 58,134 images · 40+ disease classes ·  91.83% accuracy',
     cta: '🔍 Detect Disease Now',
     howTitle: 'How It Works',
     cropsTitle: 'Supported Crops',
-    cropsSubtitle: 'The model can detect diseases across these 11 crops',
+    cropsSubtitle: 'The model can detect diseases across these 12 crops',
     modelTitle: 'About the Model',
     modelP1: 'This project uses MobileNetV2, a lightweight deep learning architecture optimized for image classification. The model was trained on the PlantVillage dataset, one of the most widely used public datasets for plant disease detection research.',
     modelP2: 'Transfer learning was applied — the base model was pre-trained on ImageNet, then fine-tuned on 54,305 leaf images across 38 disease classes. Training was done for 10 epochs using TensorFlow on a local machine.',
@@ -49,15 +50,19 @@ const text = {
     ctaBottomSub: 'Upload a leaf photo and get results in seconds.',
     getStarted: 'Get Started →',
     footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2',
+    // in en:
+dashboard: ' View Analytics Dashboard',
+
+
   },
   np: {
     title: 'बाली रोग पहिचानकर्ता',
     subtitle: 'एउटै फोटोबाट बालीका पातमा रोग पत्ता लगाउने AI-संचालित उपकरण। किसान र कृषि कार्यकर्तालाई समस्या छिटो पहिचान गर्न सहयोग गर्छ।',
-    stats: '५४,३०५ छविहरूमा प्रशिक्षित · ३८ रोग वर्गहरू · ९४.२२% सटीकता',
+    stats: '५८,१३४ छविहरूमा प्रशिक्षित · ४०+ रोग वर्गहरू · ९१.८३% सटीकता',
     cta: '🔍 रोग पहिचान गर्नुहोस्',
     howTitle: 'यसले कसरी काम गर्छ',
     cropsTitle: 'समर्थित बालीहरू',
-    cropsSubtitle: 'मोडलले यी ११ बालीहरूमा रोग पत्ता लगाउन सक्छ',
+    cropsSubtitle: 'मोडलले यी १२ बालीहरूमा रोग पत्ता लगाउन सक्छ',
     modelTitle: 'मोडलको बारेमा',
     modelP1: 'यो परियोजनाले MobileNetV2 प्रयोग गर्छ, जो छवि वर्गीकरणका लागि अनुकूलित हल्का डीप लर्निङ आर्किटेक्चर हो। मोडललाई PlantVillage डेटासेटमा प्रशिक्षित गरिएको थियो।',
     modelP2: 'ट्रान्सफर लर्निङ प्रयोग गरियो — बेस मोडललाई ImageNet मा प्री-ट्रेन गरेर ३८ रोग वर्गका ५४,३०५ पात छविहरूमा फाइन-ट्यून गरियो।',
@@ -69,6 +74,8 @@ const text = {
     ctaBottomSub: 'पातको फोटो अपलोड गर्नुहोस् र सेकेन्डमा नतिजा पाउनुहोस्।',
     getStarted: 'सुरु गर्नुहोस् →',
     footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 द्वारा संचालित',
+    // in np:
+dashboard: ' एनालिटिक्स ड्यासबोर्ड हेर्नुहोस्',
   },
 };
 
@@ -172,16 +179,24 @@ function Home() {
       </div>
 
       {/* Final CTA */}
-      <div className="py-12 px-6 text-center bg-green-700">
-        <h2 className="text-2xl font-bold text-white mb-3">{t.ctaBottom}</h2>
-        <p className="text-green-200 mb-6 text-sm">{t.ctaBottomSub}</p>
-        <button
-          onClick={() => navigate('/upload')}
-          className="bg-white text-green-700 font-semibold text-lg px-10 py-4 rounded-2xl shadow hover:bg-green-50 transition duration-200"
-        >
-          {t.getStarted}
-        </button>
-      </div>
+<div className="py-12 px-6 text-center bg-green-700">
+  <h2 className="text-2xl font-bold text-white mb-3">{t.ctaBottom}</h2>
+  <p className="text-green-200 mb-6 text-sm">{t.ctaBottomSub}</p>
+  <div className="flex flex-col items-center gap-3">
+    <button
+      onClick={() => navigate('/upload')}
+      className="bg-white text-green-700 font-semibold text-lg px-10 py-4 rounded-2xl shadow hover:bg-green-50 transition duration-200 w-64"
+    >
+      {t.getStarted}
+    </button>
+    <button
+      onClick={() => navigate('/dashboard')}
+      className="bg-transparent border border-green-400 text-green-200 font-medium text-sm px-8 py-3 rounded-2xl hover:bg-green-600 transition duration-200 w-64"
+    >
+      {t.dashboard}
+    </button>
+  </div>
+</div>
 
       {/* Footer */}
       <div className={`text-center py-8 text-xs ${dark ? 'bg-gray-900 text-gray-500' : 'bg-white text-gray-400'}`}>

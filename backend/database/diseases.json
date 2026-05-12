@@ -72,6 +72,59 @@
     ],
     "severity": "None"
   },
+  "Blueberry___healthy": {
+    "name": "Healthy Blueberry",
+    "crop": "Blueberry",
+    "description": "No disease detected. The blueberry plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Maintain acidic soil pH between 4.5 and 5.5.",
+      "Monitor regularly for early signs of disease."
+    ],
+    "severity": "None"
+  },
+  "Cherry_(including_sour)___Powdery_mildew": {
+    "name": "Cherry Powdery Mildew",
+    "crop": "Cherry",
+    "description": "A fungal disease that appears as white powdery growth on cherry leaves and shoots. It thrives in warm days and cool nights with high humidity.",
+    "cause": "Fungal infection caused by Podosphaera clandestina. Favored by warm days and cool nights.",
+    "symptoms": [
+      "White powdery coating on young leaves and shoots.",
+      "Infected leaves curl and distort.",
+      "Shoot growth may be stunted.",
+      "Severely infected leaves may turn yellow and drop."
+    ],
+    "treatment": [
+      "Apply sulfur-based fungicide at first sign of infection.",
+      "Prune infected shoots to reduce spread.",
+      "Improve air circulation through proper pruning.",
+      "Avoid excessive nitrogen fertilization."
+    ],
+    "severity": "Medium"
+  },
+  "Cherry_(including_sour)___healthy": {
+    "name": "Healthy Cherry",
+    "crop": "Cherry",
+    "description": "No disease detected. The cherry plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain good orchard hygiene."
+    ],
+    "severity": "None"
+  },
   "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
     "name": "Corn Gray Leaf Spot",
     "crop": "Corn (Maize)",
@@ -94,8 +147,8 @@
   "Corn_(maize)___Common_rust_": {
     "name": "Corn Common Rust",
     "crop": "Corn (Maize)",
-    "cause": "Fungal disease caused by Puccinia sorghi. Spreads through wind-blown spores.",
     "description": "A widespread fungal disease that spreads rapidly through wind-blown spores. Most damaging during cool, moist weather conditions.",
+    "cause": "Fungal disease caused by Puccinia sorghi. Spreads through wind-blown spores.",
     "symptoms": [
       "Small oval brick-red pustules scattered on both leaf surfaces.",
       "Pustules may turn dark brown as they mature.",
@@ -143,6 +196,423 @@
       "Continue regular watering and fertilization.",
       "Monitor regularly for early signs of disease.",
       "Maintain proper spacing for air circulation."
+    ],
+    "severity": "None"
+  },
+  "Grape___Black_rot": {
+    "name": "Grape Black Rot",
+    "crop": "Grape",
+    "description": "A devastating fungal disease of grapes that can destroy entire crops. Warm, wet weather during early growing season significantly increases severity.",
+    "cause": "Fungal infection caused by Guignardia bidwellii. Spreads in warm and wet conditions.",
+    "symptoms": [
+      "Small yellow spots on leaves that turn brown with dark borders.",
+      "Infected berries shrivel into hard black mummies.",
+      "Black lesions appear on stems and tendrils.",
+      "Entire clusters can be destroyed in severe infections."
+    ],
+    "treatment": [
+      "Apply fungicide (Mancozeb or Myclobutanil) from bud break through berry set.",
+      "Remove and destroy mummified berries and infected leaves.",
+      "Prune vines to improve air circulation.",
+      "Practice good vineyard sanitation throughout the season."
+    ],
+    "severity": "High"
+  },
+  "Grape___Esca_(Black_Measles)": {
+    "name": "Grape Esca (Black Measles)",
+    "crop": "Grape",
+    "description": "A complex fungal disease also known as Black Measles. It is a chronic vine disease that can persist for years and gradually weaken or kill the vine.",
+    "cause": "Complex fungal disease caused by multiple fungi including Phaeomoniella chlamydospora.",
+    "symptoms": [
+      "Tiger-stripe pattern of yellow and brown on leaves.",
+      "Berries develop dark spots giving a measles-like appearance.",
+      "Internal wood shows dark streaking when cut.",
+      "Sudden vine collapse can occur in severe cases."
+    ],
+    "treatment": [
+      "Prune out and destroy infected wood.",
+      "Protect pruning wounds with fungicide paste.",
+      "Avoid large pruning wounds during wet weather.",
+      "Remove severely infected vines to protect surrounding plants."
+    ],
+    "severity": "High"
+  },
+  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+    "name": "Grape Leaf Blight",
+    "crop": "Grape",
+    "description": "A fungal leaf disease of grapes that causes significant defoliation in warm and humid conditions. Mainly affects leaves rather than fruits.",
+    "cause": "Fungal infection caused by Isariopsis clavispora (Pseudocercospora vitis).",
+    "symptoms": [
+      "Irregular dark brown spots on upper leaf surface.",
+      "Spots enlarge and merge causing large dead areas.",
+      "Severe infection leads to premature defoliation.",
+      "Weakens vines and reduces next season yield."
+    ],
+    "treatment": [
+      "Apply fungicide (Mancozeb or Copper oxychloride) at early sign.",
+      "Remove and destroy infected leaves.",
+      "Ensure proper vine spacing for air circulation.",
+      "Avoid excessive irrigation that increases humidity."
+    ],
+    "severity": "Medium"
+  },
+  "Grape___healthy": {
+    "name": "Healthy Grape",
+    "crop": "Grape",
+    "description": "No disease detected. The grape vine appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain proper vine training and pruning."
+    ],
+    "severity": "None"
+  },
+  "Orange___Haunglongbing_(Citrus_greening)": {
+    "name": "Citrus Greening (Huanglongbing)",
+    "crop": "Orange",
+    "description": "One of the most serious citrus diseases in the world with no known cure. It is spread by a tiny insect and can kill a citrus tree within a few years of infection.",
+    "cause": "Bacterial disease caused by Candidatus Liberibacter asiaticus. Spread by Asian citrus psyllid insect.",
+    "symptoms": [
+      "Yellow mottling of leaves — asymmetric blotchy yellowing.",
+      "Fruits remain small, lopsided, and bitter.",
+      "Fruits may stay green at the bottom even when ripe.",
+      "Tree gradually declines and dies over several years."
+    ],
+    "treatment": [
+      "Remove and destroy infected trees immediately to prevent spread.",
+      "Control Asian citrus psyllid with insecticide sprays.",
+      "Use certified disease-free planting material.",
+      "There is no cure — prevention and vector control are critical."
+    ],
+    "severity": "Very High"
+  },
+  "Peach___Bacterial_spot": {
+    "name": "Peach Bacterial Spot",
+    "crop": "Peach",
+    "description": "A common and destructive bacterial disease of peaches and nectarines. Warm, wet, and windy conditions favor its spread and severity.",
+    "cause": "Bacterial infection caused by Xanthomonas arboricola pv. pruni. Spread by wind and rain.",
+    "symptoms": [
+      "Small water-soaked spots on leaves turning brown with yellow margins.",
+      "Spots may fall out leaving a shot-hole appearance.",
+      "Fruits develop small pits and cracks with dark spots.",
+      "Severe infections cause defoliation and reduced fruit quality."
+    ],
+    "treatment": [
+      "Apply copper-based bactericide in early spring before symptoms appear.",
+      "Avoid overhead irrigation to reduce leaf wetness.",
+      "Plant resistant peach varieties where available.",
+      "Remove and destroy severely infected plant material."
+    ],
+    "severity": "Medium"
+  },
+  "Peach___healthy": {
+    "name": "Healthy Peach",
+    "crop": "Peach",
+    "description": "No disease detected. The peach tree appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain good orchard hygiene."
+    ],
+    "severity": "None"
+  },
+  "Pepper,_bell___Bacterial_spot": {
+    "name": "Bell Pepper Bacterial Spot",
+    "crop": "Bell Pepper",
+    "description": "A serious bacterial disease affecting bell peppers in warm, wet conditions. It affects leaves, stems, and fruits and can cause severe yield loss.",
+    "cause": "Bacterial infection caused by Xanthomonas campestris pv. vesicatoria. Spread by rain and contaminated tools.",
+    "symptoms": [
+      "Small water-soaked spots on leaves turning brown with yellow halos.",
+      "Spots may coalesce causing large dead areas.",
+      "Fruits develop raised, scabby, dark lesions.",
+      "Severe infections cause premature defoliation."
+    ],
+    "treatment": [
+      "Use certified disease-free seeds and transplants.",
+      "Apply copper-based bactericide spray every 5-7 days during wet weather.",
+      "Avoid overhead irrigation.",
+      "Remove and destroy infected plant material immediately."
+    ],
+    "severity": "High"
+  },
+  "Pepper,_bell___healthy": {
+    "name": "Healthy Bell Pepper",
+    "crop": "Bell Pepper",
+    "description": "No disease detected. The bell pepper plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering at soil level.",
+      "Apply balanced fertilizer as needed.",
+      "Monitor regularly for early signs of disease."
+    ],
+    "severity": "None"
+  },
+  "Potato___Early_blight": {
+    "name": "Potato Early Blight",
+    "crop": "Potato",
+    "description": "A common fungal disease of potatoes that typically affects older leaves first. Warm temperatures and high humidity favor disease development.",
+    "cause": "Fungal disease caused by Alternaria solani. Favored by warm temperatures and high humidity.",
+    "symptoms": [
+      "Dark brown spots with concentric rings (target-like pattern) on older leaves.",
+      "Yellow area surrounding the spots.",
+      "Infected leaves turn yellow and drop prematurely.",
+      "Severe infection moves upward to younger leaves."
+    ],
+    "treatment": [
+      "Apply fungicide (Mancozeb or Chlorothalonil) at first sign of disease.",
+      "Remove and destroy infected leaves.",
+      "Avoid overhead irrigation.",
+      "Practice crop rotation — do not plant potatoes in same field consecutively."
+    ],
+    "severity": "Medium"
+  },
+  "Potato___Late_blight": {
+    "name": "Potato Late Blight",
+    "crop": "Potato",
+    "description": "One of the most devastating plant diseases in history — responsible for the Irish Potato Famine. Can destroy an entire crop within days under cool, wet conditions.",
+    "cause": "Caused by Phytophthora infestans. Spreads rapidly in cool and wet conditions.",
+    "symptoms": [
+      "Large irregular dark water-soaked patches on leaves.",
+      "White mold visible on leaf undersides in humid weather.",
+      "Infected tubers develop dark, firm rot.",
+      "Plants may collapse entirely within days in severe cases."
+    ],
+    "treatment": [
+      "Apply fungicide (Metalaxyl or Mancozeb) immediately at first sign.",
+      "Remove and destroy all infected plant parts.",
+      "Avoid wetting leaves during irrigation.",
+      "Use certified disease-free seed potatoes."
+    ],
+    "severity": "Very High"
+  },
+  "Potato___healthy": {
+    "name": "Healthy Potato",
+    "crop": "Potato",
+    "description": "No disease detected. The potato plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Ensure proper hilling and drainage."
+    ],
+    "severity": "None"
+  },
+  "Raspberry___healthy": {
+    "name": "Healthy Raspberry",
+    "crop": "Raspberry",
+    "description": "No disease detected. The raspberry plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Prune old canes after harvest."
+    ],
+    "severity": "None"
+  },
+  "Rice___Bacterial_Leaf_Blight": {
+    "name": "Rice Bacterial Leaf Blight",
+    "crop": "Rice",
+    "description": "A serious bacterial disease of rice caused by Xanthomonas oryzae pv. oryzae, leading to wilting and yellowing of leaves. One of the most devastating rice diseases in Asia.",
+    "cause": "Bacterial infection caused by Xanthomonas oryzae pv. oryzae. Spreads through infected water, rain splash, and wounds.",
+    "symptoms": [
+      "Water-soaked lesions along leaf margins turning yellow.",
+      "Yellowing and wilting of leaves from the tip downward.",
+      "Milky or opaque bacterial ooze visible on lesions in the morning.",
+      "Entire leaf may dry out in severe cases."
+    ],
+    "treatment": [
+      "Use copper-based bactericides at early infection stage.",
+      "Apply streptomycin-based sprays if available.",
+      "Remove and destroy heavily infected plant material.",
+      "Drain fields and avoid flood irrigation during outbreaks."
+    ],
+    "severity": "High"
+  },
+  "Rice___Brown_Spot": {
+    "name": "Rice Brown Spot",
+    "crop": "Rice",
+    "description": "A fungal disease caused by Cochliobolus miyabeanus that affects rice leaves and grains. Historically associated with the 1943 Bengal famine. Reduces yield significantly.",
+    "cause": "Fungal infection caused by Cochliobolus miyabeanus. Favored by nutrient-deficient soils.",
+    "symptoms": [
+      "Oval to circular brown spots on leaves with grey or whitish centers.",
+      "Dark brown borders surrounding the spots.",
+      "Spots also appear on glumes and grains causing discoloration.",
+      "Severely infected leaves turn yellow and dry out."
+    ],
+    "treatment": [
+      "Apply fungicides like Iprodione or Tricyclazole at first sign.",
+      "Use potassium silicate to strengthen plant cell walls.",
+      "Improve soil fertility especially potassium and phosphorus."
+    ],
+    "severity": "Medium"
+  },
+  "Rice___Healthy": {
+    "name": "Healthy Rice",
+    "crop": "Rice",
+    "description": "No disease detected. The rice plant appears to be in good health with green upright leaves and no visible lesions or discoloration.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green, upright, and free from lesions.",
+      "No spots, discoloration, or wilting visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain proper field drainage."
+    ],
+    "severity": "None"
+  },
+  "Rice___Leaf_Blast": {
+    "name": "Rice Leaf Blast",
+    "crop": "Rice",
+    "description": "One of the most destructive rice diseases worldwide caused by Magnaporthe oryzae fungus. Can cause complete crop failure under favorable conditions.",
+    "cause": "Fungal infection caused by Magnaporthe oryzae. Spreads through wind-blown spores in humid conditions.",
+    "symptoms": [
+      "Diamond or eye-shaped lesions with gray centers and brown borders on leaves.",
+      "White to gray spindle-shaped spots on young leaves.",
+      "Rapid leaf blighting and browning in severe cases.",
+      "Collar rot at the base of leaves in neck blast stage."
+    ],
+    "treatment": [
+      "Apply Tricyclazole or Isoprothiolane fungicides at early infection.",
+      "Use silicon fertilizers to strengthen plant cell walls.",
+      "Apply fungicide at booting stage to prevent neck blast."
+    ],
+    "severity": "High"
+  },
+  "Rice___Leaf_Scald": {
+    "name": "Rice Leaf Scald",
+    "crop": "Rice",
+    "description": "A fungal disease caused by Microdochium oryzae that produces a characteristic scalded appearance on rice leaves. Common in tropical and subtropical regions.",
+    "cause": "Fungal infection caused by Microdochium oryzae. Favored by high humidity and dense planting.",
+    "symptoms": [
+      "Irregular lesions with light tan or straw-colored centers on leaves.",
+      "Zonate or banded appearance giving a scalded look.",
+      "Lesions have dark brown margins.",
+      "Affected leaves dry out from the tip downward."
+    ],
+    "treatment": [
+      "Apply appropriate fungicides at early infection stage.",
+      "Remove and destroy heavily infected plant debris.",
+      "Improve field drainage to reduce humidity."
+    ],
+    "severity": "Medium"
+  },
+  "Rice___Sheath_Blight": {
+    "name": "Rice Sheath Blight",
+    "crop": "Rice",
+    "description": "A major rice disease caused by Rhizoctonia solani fungus. Particularly severe under high humidity and dense planting. One of the most economically important rice diseases globally.",
+    "cause": "Fungal infection caused by Rhizoctonia solani. Survives in soil and spreads through water and infected debris.",
+    "symptoms": [
+      "Oval or elliptical lesions on leaf sheaths near water level.",
+      "Lesions have gray-white centers with dark brown borders.",
+      "Lesions spread upward to higher sheaths and leaves.",
+      "Lodging of plants in severe infections."
+    ],
+    "treatment": [
+      "Apply fungicides like Validamycin or Hexaconazole at early stage.",
+      "Use biological control agents like Trichoderma harzianum.",
+      "Drain fields periodically to reduce humidity."
+    ],
+    "severity": "High"
+  },
+  "Soybean___healthy": {
+    "name": "Healthy Soybean",
+    "crop": "Soybean",
+    "description": "No disease detected. The soybean plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Maintain proper plant spacing for air circulation."
+    ],
+    "severity": "None"
+  },
+  "Squash___Powdery_mildew": {
+    "name": "Squash Powdery Mildew",
+    "crop": "Squash",
+    "description": "A very common fungal disease of squash and other cucurbits. Unlike most fungal diseases, it thrives in warm dry conditions with low humidity.",
+    "cause": "Fungal infection caused by Podosphaera xanthii. Thrives in warm, dry conditions.",
+    "symptoms": [
+      "White powdery spots on upper and lower leaf surfaces.",
+      "Spots enlarge to cover entire leaf surface.",
+      "Infected leaves turn yellow then brown and die.",
+      "Severe infection reduces fruit size and quality."
+    ],
+    "treatment": [
+      "Apply sulfur-based or potassium bicarbonate fungicide at first sign.",
+      "Remove severely infected leaves.",
+      "Improve air circulation by proper plant spacing.",
+      "Avoid excessive nitrogen fertilization."
+    ],
+    "severity": "Medium"
+  },
+  "Strawberry___Leaf_scorch": {
+    "name": "Strawberry Leaf Scorch",
+    "crop": "Strawberry",
+    "description": "A common fungal disease of strawberries that causes purplish spots on leaves. Severe infections can reduce plant vigor and fruit yield significantly.",
+    "cause": "Fungal infection caused by Diplocarpon earlianum. Favored by warm, wet conditions.",
+    "symptoms": [
+      "Small dark purple to red spots on upper leaf surface.",
+      "Spots lack a defined border unlike other leaf diseases.",
+      "Severely infected leaves turn brown and dry out.",
+      "Plant vigor and yield are reduced in chronic infections."
+    ],
+    "treatment": [
+      "Apply fungicide (Captan or Myclobutanil) at first sign of infection.",
+      "Remove and destroy infected leaves.",
+      "Avoid overhead irrigation.",
+      "Plant resistant strawberry varieties where available."
+    ],
+    "severity": "Medium"
+  },
+  "Strawberry___healthy": {
+    "name": "Healthy Strawberry",
+    "crop": "Strawberry",
+    "description": "No disease detected. The strawberry plant appears to be in good health.",
+    "cause": "No disease detected.",
+    "symptoms": [
+      "Plant appears healthy with no visible disease symptoms.",
+      "Leaves are green and intact.",
+      "No spots, lesions, or discoloration visible."
+    ],
+    "treatment": [
+      "Continue regular watering and fertilization.",
+      "Monitor regularly for early signs of disease.",
+      "Remove old leaves and runners as needed."
     ],
     "severity": "None"
   },
@@ -202,6 +672,120 @@
       "Destroy crop residue after harvest completely."
     ],
     "severity": "Very High"
+  },
+  "Tomato___Leaf_Mold": {
+    "name": "Tomato Leaf Mold",
+    "crop": "Tomato",
+    "description": "A fungal disease that primarily affects tomatoes grown in greenhouses or high-humidity environments. It rarely affects fruits but can cause significant defoliation.",
+    "cause": "Fungal infection caused by Passalora fulva. Thrives in high humidity above 85%.",
+    "symptoms": [
+      "Pale green to yellow spots on upper leaf surface.",
+      "Olive-green to gray velvety mold on leaf undersides.",
+      "Infected leaves curl upward and drop.",
+      "Severe infections cause significant defoliation."
+    ],
+    "treatment": [
+      "Reduce humidity by improving greenhouse ventilation.",
+      "Apply fungicide (Chlorothalonil or Mancozeb) at first sign.",
+      "Remove and destroy infected leaves.",
+      "Avoid wetting foliage during irrigation."
+    ],
+    "severity": "Medium"
+  },
+  "Tomato___Septoria_leaf_spot": {
+    "name": "Tomato Septoria Leaf Spot",
+    "crop": "Tomato",
+    "description": "One of the most destructive diseases of tomato foliage. It typically appears after plants begin bearing fruit and spreads rapidly in warm, wet conditions.",
+    "cause": "Fungal disease caused by Septoria lycopersici. Spreads through rain splash and infected debris.",
+    "symptoms": [
+      "Small circular spots with dark borders and light gray centers on leaves.",
+      "Tiny black dots (fungal bodies) visible in spot centers.",
+      "Infected leaves turn yellow then brown and drop.",
+      "Disease moves upward from older to younger leaves."
+    ],
+    "treatment": [
+      "Apply fungicide (Mancozeb or Chlorothalonil) at first sign of disease.",
+      "Remove infected lower leaves immediately.",
+      "Avoid overhead irrigation.",
+      "Mulch soil to prevent rain splash from soil to leaves."
+    ],
+    "severity": "Medium"
+  },
+  "Tomato___Spider_mites Two-spotted_spider_mite": {
+    "name": "Tomato Spider Mites",
+    "crop": "Tomato",
+    "description": "Spider mites are tiny pests that suck sap from tomato leaves. They thrive in hot, dry conditions and can rapidly colonize entire plants.",
+    "cause": "Infestation by Tetranychus urticae (two-spotted spider mite). Thrives in hot, dry weather.",
+    "symptoms": [
+      "Tiny yellow or white stippling dots on upper leaf surface.",
+      "Fine webbing on leaves and stems in severe infestations.",
+      "Leaves turn bronze, yellow, then brown and drop.",
+      "Visible tiny moving dots on leaf undersides."
+    ],
+    "treatment": [
+      "Apply miticide or insecticidal soap spray on leaf undersides.",
+      "Spray plants with strong water jet to dislodge mites.",
+      "Introduce natural predators like predatory mites.",
+      "Avoid excessive nitrogen fertilization which promotes mite outbreaks."
+    ],
+    "severity": "Medium"
+  },
+  "Tomato___Target_Spot": {
+    "name": "Tomato Target Spot",
+    "crop": "Tomato",
+    "description": "A fungal disease that produces distinctive target-like lesions on tomato leaves, stems, and fruits. Warm, humid conditions with frequent rainfall favor its development.",
+    "cause": "Fungal infection caused by Corynespora cassiicola. Favored by warm, humid conditions.",
+    "symptoms": [
+      "Brown spots with concentric rings forming a target pattern.",
+      "Spots appear on leaves, stems, and fruits.",
+      "Infected leaves turn yellow and drop.",
+      "Fruit lesions are dark, sunken, and may have concentric rings."
+    ],
+    "treatment": [
+      "Apply fungicide (Azoxystrobin or Chlorothalonil) at first sign.",
+      "Remove and destroy infected plant parts.",
+      "Improve air circulation through proper staking and pruning.",
+      "Avoid overhead irrigation."
+    ],
+    "severity": "Medium"
+  },
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+    "name": "Tomato Yellow Leaf Curl Virus",
+    "crop": "Tomato",
+    "description": "A devastating viral disease spread by whiteflies. It is one of the most damaging tomato viruses worldwide, causing severe yield loss with no chemical cure.",
+    "cause": "Viral disease caused by Tomato yellow leaf curl virus (TYLCV). Transmitted by whitefly Bemisia tabaci.",
+    "symptoms": [
+      "Leaves curl upward and inward with yellow edges.",
+      "Leaves become small, thick, and leathery.",
+      "Infected plants are stunted with reduced fruit set.",
+      "Flowers may drop without producing fruit."
+    ],
+    "treatment": [
+      "Control whitefly population with insecticide or yellow sticky traps.",
+      "Remove and destroy infected plants immediately.",
+      "Use reflective mulches to repel whiteflies.",
+      "Plant virus-resistant tomato varieties."
+    ],
+    "severity": "Very High"
+  },
+  "Tomato___Tomato_mosaic_virus": {
+    "name": "Tomato Mosaic Virus",
+    "crop": "Tomato",
+    "description": "A highly contagious viral disease that spreads easily through contact, tools, and hands. It can persist in soil and plant debris for years.",
+    "cause": "Caused by Tomato mosaic virus (ToMV). Spreads through contact, infected tools, and contaminated hands.",
+    "symptoms": [
+      "Mosaic pattern of light and dark green on leaves.",
+      "Leaves may be distorted, curled, or fern-like.",
+      "Fruits may show yellow mottling or uneven ripening.",
+      "Plant growth is stunted in severe infections."
+    ],
+    "treatment": [
+      "Remove and destroy infected plants immediately.",
+      "Disinfect all tools with bleach solution before use.",
+      "Wash hands thoroughly before handling plants.",
+      "Plant virus-resistant tomato varieties."
+    ],
+    "severity": "High"
   },
   "Tomato___healthy": {
     "name": "Healthy Tomato",

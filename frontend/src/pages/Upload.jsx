@@ -111,11 +111,17 @@ reader.readAsDataURL(file);
         <button onClick={toggleDark} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
           {dark ? '☀️ Light' : '🌙 Dark'}
         </button>
+        <button onClick={() => navigate('/history')} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
+    📋 History
+  </button>
       </div>
 
-      <button onClick={() => navigate('/')} className={`text-sm mb-8 inline-block ${dark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}>
-        {t.back}
-      </button>
+     
+  <button onClick={() => navigate('/')} className={`text-sm ${dark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}>
+    {t.back}
+  </button>
+  
+
 
       <div className="max-w-xl mx-auto">
         <h1 className={`text-3xl font-bold mb-2 text-center ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.title}</h1>

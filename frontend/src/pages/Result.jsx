@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
+import html2canvas from 'html2canvas';
+
+const API_URL = 'http://localhost:5000';
 
 const text = {
   en: {
@@ -30,6 +33,13 @@ const text = {
     tips: ['Use natural daylight', 'Get closer to the leaf', 'Make sure the image is not blurry', 'Focus on the most affected part'],
     retake: '📷 Retake Photo',
     tryAnother: '← Try Another Photo',
+    feedbackTitle: 'Was this result correct?',
+    feedbackYes: '👍 Yes, correct',
+    feedbackNo: '👎 No, incorrect',
+    feedbackThanks: '✅ Thank you for your feedback!',
+    feedbackError: 'Could not submit feedback. Try again.',
+    download: '📥 Save as Image',
+    downloading: 'Saving...',
   },
   np: {
     back: '← अर्को विश्लेषण गर्नुहोस्',
@@ -58,6 +68,13 @@ const text = {
     tips: ['प्राकृतिक दिवालोक प्रयोग गर्नुहोस्', 'पातको नजिक जानुहोस्', 'छवि धमिलो नभएको सुनिश्चित गर्नुहोस्', 'सबैभन्दा प्रभावित भागमा फोकस गर्नुहोस्'],
     retake: '📷 फोटो पुन: खिच्नुहोस्',
     tryAnother: '← अर्को फोटो प्रयास गर्नुहोस्',
+    feedbackTitle: 'के यो नतिजा सही थियो?',
+    feedbackYes: '👍 हो, सही',
+    feedbackNo: '👎 होइन, गलत',
+    feedbackThanks: '✅ तपाईंको प्रतिक्रियाको लागि धन्यवाद!',
+    feedbackError: 'प्रतिक्रिया पठाउन सकिएन। पुन: प्रयास गर्नुहोस्।',
+    download: '📥 छवि सेभ गर्नुहोस्',
+    downloading: 'सेभ हुँदैछ...',
   },
 };
 
@@ -69,6 +86,60 @@ function Result() {
   const dark = darkMode;
 
   const { result, preview } = location.state || {};
+
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackError, setFeedbackError] = useState(false);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+
+  const resultCardRef = useRef(null);
+
+  const submitFeedback = async (feedbackValue) => {
+    if (!result?.prediction_id) return;
+    setFeedbackLoading(true);
+    setFeedbackError(false);
+    try {
+      const res = await fetch(`${API_URL}/feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prediction_id: result.prediction_id,
+          feedback: feedbackValue,
+        }),
+      });
+      if (res.ok) {
+        setFeedbackSubmitted(true);
+      } else {
+        setFeedbackError(true);
+      }
+    } catch {
+      setFeedbackError(true);
+    } finally {
+      setFeedbackLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!resultCardRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(resultCardRef.current, {
+        backgroundColor: dark ? '#111827' : '#f0fdf4',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      const link = document.createElement('a');
+      const diseaseName = result?.disease?.name || result?.predicted_class || 'result';
+      link.download = `crop-disease-${diseaseName.replace(/\s+/g, '-').toLowerCase()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      console.error('Download failed:', err);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const TopBar = () => (
     <div className="flex justify-end gap-2 mb-6">
@@ -136,7 +207,9 @@ function Result() {
         {t.back}
       </button>
 
-      <div className="max-w-xl mx-auto">
+      {/* ---- CAPTURED AREA ---- */}
+      <div ref={resultCardRef} className={`max-w-xl mx-auto rounded-3xl p-6 ${dark ? 'bg-gray-900' : 'bg-green-50'}`}>
+
         <h1 className={`text-3xl font-bold mb-1 text-center ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.title}</h1>
         <p className={`text-sm text-center mb-8 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.subtitle}</p>
 
@@ -158,7 +231,7 @@ function Result() {
             <span className={`font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>{confidencePercent}%</span>
           </div>
           <div className={`w-full rounded-full h-3 ${dark ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <div className={`${barColor} h-3 rounded-full transition-all duration-500`} style={{ width: `${confidencePercent}%` }} />
+            <div className={`${barColor} h-3 rounded-full`} style={{ width: `${confidencePercent}%` }} />
           </div>
           <p className={`text-xs mt-2 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
             {confidenceRaw >= 0.85 ? t.highConf : confidenceRaw >= 0.60 ? t.modConf : t.lowConf}
@@ -174,7 +247,7 @@ function Result() {
                 <p className={`text-sm leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{disease.description}</p>
               </div>
             )}
-           {Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
+            {Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
                 <h3 className={`font-semibold mb-3 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.symptoms}</h3>
                 <ul className="space-y-1">
@@ -202,7 +275,7 @@ function Result() {
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border flex items-center justify-between ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
                 <span className={`font-medium text-sm ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.severity}</span>
                 <span className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  disease.severity === 'High' ? 'bg-red-100 text-red-600' :
+                  disease.severity === 'High' || disease.severity === 'Very High' ? 'bg-red-100 text-red-600' :
                   disease.severity === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
                   'bg-green-100 text-green-700'
                 }`}>
@@ -213,10 +286,73 @@ function Result() {
           </>
         )}
 
-        {/* Disclaimer */}
-        <div className={`border rounded-xl px-5 py-4 mb-6 ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+        {/* Disclaimer inside capture */}
+        <div className={`border rounded-xl px-5 py-4 mb-3 ${dark ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
           <p className={`text-xs text-center ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.disclaimer}</p>
         </div>
+
+        {/* Watermark */}
+        <p className={`text-center text-xs ${dark ? 'text-gray-600' : 'text-gray-300'}`}>
+          🌿 Crop Disease Detector — BCA 8th Semester Project
+        </p>
+
+      </div>
+      {/* ---- END CAPTURED AREA ---- */}
+
+      <div className="max-w-xl mx-auto mt-4">
+
+        {/* Feedback Card */}
+        {result.prediction_id && (
+          <div className={`rounded-2xl shadow-sm p-5 mb-4 border text-center ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
+            {feedbackSubmitted ? (
+              <p className={`text-sm font-semibold ${dark ? 'text-green-400' : 'text-green-700'}`}>
+                {t.feedbackThanks}
+              </p>
+            ) : (
+              <>
+                <p className={`text-sm font-medium mb-3 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {t.feedbackTitle}
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => submitFeedback('correct')}
+                    disabled={feedbackLoading}
+                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${
+                      dark ? 'border-green-600 text-green-400 hover:bg-green-900' : 'border-green-400 text-green-700 hover:bg-green-50'
+                    } disabled:opacity-50`}
+                  >
+                    {t.feedbackYes}
+                  </button>
+                  <button
+                    onClick={() => submitFeedback('incorrect')}
+                    disabled={feedbackLoading}
+                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${
+                      dark ? 'border-red-700 text-red-400 hover:bg-red-900' : 'border-red-300 text-red-600 hover:bg-red-50'
+                    } disabled:opacity-50`}
+                  >
+                    {t.feedbackNo}
+                  </button>
+                </div>
+                {feedbackError && (
+                  <p className={`text-xs mt-2 ${dark ? 'text-red-400' : 'text-red-500'}`}>
+                    {t.feedbackError}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Download Button */}
+        <button
+          onClick={handleDownload}
+          disabled={downloading}
+          className={`w-full mb-3 border font-medium py-3 rounded-xl transition text-sm ${
+            dark ? 'border-gray-600 text-gray-300 hover:bg-gray-800' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+          } disabled:opacity-50`}
+        >
+          {downloading ? t.downloading : t.download}
+        </button>
 
         {/* Action Buttons */}
         <div className="flex gap-3">
