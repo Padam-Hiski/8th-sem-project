@@ -109,17 +109,28 @@ def predict():
         predicted_index = int(np.argmax(predictions))
         predicted_class = CLASSES[predicted_index]
 
-        # Confidence threshold check
+        # ---- TOP 3 PREDICTIONS ----
+        top3_indices = np.argsort(predictions[0])[::-1][:3]
+        top3 = [
+            {
+                "class": CLASSES[i],
+                "confidence": round(float(predictions[0][i]) * 100, 2)
+            }
+            for i in top3_indices
+        ]
+
+        # ---- CONFIDENCE THRESHOLD CHECK ----
         if confidence < CONFIDENCE_THRESHOLD:
             response = {
                 "status": "low_confidence",
                 "message": "Image is unclear. Please retake the photo in better lighting.",
-                "confidence": round(confidence * 100, 2)
+                "confidence": round(confidence * 100, 2),
+                "top3": top3
             }
             print("RESPONSE:", json.dumps(response))
             return jsonify(response)
 
-        # Get disease info from database
+        # ---- GET DISEASE INFO ----
         disease_info = DISEASES.get(predicted_class, {
             "name": predicted_class.replace("_", " "),
             "crop": "Unknown",
@@ -131,7 +142,7 @@ def predict():
 
         crop_type = disease_info.get("crop", "Unknown")
 
-        # Save to SQLite
+        # ---- SAVE TO SQLITE ----
         prediction_id = save_prediction(predicted_class, round(confidence * 100, 2), crop_type)
 
         response = {
@@ -139,7 +150,8 @@ def predict():
             "prediction_id": prediction_id,
             "predicted_class": predicted_class,
             "confidence": round(confidence * 100, 2),
-            "disease": disease_info
+            "disease": disease_info,
+            "top3": top3
         }
         return jsonify(response)
 
@@ -301,4 +313,4 @@ if __name__ == "__main__":
     app.run(debug=True, port=5000)
 
 # ---- INIT DB ON STARTUP (for gunicorn) ----
-init_db() 
+init_db()
