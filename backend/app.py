@@ -5,12 +5,21 @@ import numpy as np
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from PIL import Image
 import tensorflow as tf
 
 # ---- SETUP ----
 app = Flask(__name__)
 CORS(app, origins="*")
+#----Rate limiter---
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per hour"]
+)
+
 
 # ---- LOAD CLASS NAMES ----
 with open("classes.json", "r") as f:
@@ -91,6 +100,7 @@ def home():
     return jsonify({"message": "Crop Disease Detector API is running!"})
 
 @app.route("/predict", methods=["POST"])
+@limiter.limit("20 per minute")
 def predict():
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
@@ -314,3 +324,5 @@ if __name__ == "__main__":
 
 # ---- INIT DB ON STARTUP (for gunicorn) ----
 init_db()
+
+

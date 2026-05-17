@@ -13,6 +13,7 @@ __pycache__/
 # Dataset (too large for GitHub)
 dataset/
 data/
+*.sqlite
 
 # Node modules
 node_modules/
