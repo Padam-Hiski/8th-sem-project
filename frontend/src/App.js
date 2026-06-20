@@ -11,7 +11,7 @@ import History from './pages/History';
 
 function App() {
   useEffect(() => {
-    fetch('https://8th-sem-project-production.up.railway.app/')
+    fetch('https://eightth-sem-project-whe8.onrender.com')
       .catch(() => {});
   }, []);
 
