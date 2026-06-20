@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 
-const API_URL = 'https://8th-sem-project-production.up.railway.app';
+const API_URL = 'https://eightth-sem-project-whe8.onrender.com';
 
 const text = {
   en: {

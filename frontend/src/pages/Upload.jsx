@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useApp } from '../AppContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 
-  'https://8th-sem-project-production.up.railway.app';
+   'http://127.0.0.1:5000';
 const MAX_SIZE_MB = 5;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
