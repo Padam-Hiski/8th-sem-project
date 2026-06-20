@@ -1,6 +1,6 @@
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # force CPU only
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import json
 import sqlite3
@@ -17,11 +17,11 @@ tf.config.threading.set_intra_op_parallelism_threads(1)
 from dotenv import load_dotenv
 import requests
 
-# ---- LOAD ENV ----
 load_dotenv()
 
-# ---- SETUP ----
 app = Flask(__name__)
+
+# CORS — allow all origins explicitly
 CORS(app,
     resources={r"/*": {"origins": "*"}},
     allow_headers=["Content-Type", "Authorization"],
@@ -36,14 +36,11 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-
-# ---- RATE LIMITER ----
 limiter = Limiter(
     get_remote_address,
     app=app,
     default_limits=["200 per hour"]
 )
-
 # ---- GEMINI SETUP ----
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
