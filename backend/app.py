@@ -167,9 +167,14 @@ def prepare_image(image):
 def home():
     return jsonify({"message": "Crop Disease Detector API is running!"})
 
+@app.route("/predict", methods=["OPTIONS"])
+def predict_options():
+    return "", 204
+
 @app.route("/predict", methods=["POST"])
 @limiter.limit("20 per minute")
 def predict():
+    
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
