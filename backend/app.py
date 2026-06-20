@@ -1,4 +1,7 @@
 import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # force CPU only
+
 import json
 import sqlite3
 import numpy as np
@@ -9,6 +12,8 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from PIL import Image
 import tensorflow as tf
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
 from dotenv import load_dotenv
 import requests
 
@@ -370,9 +375,7 @@ def feedback():
         return jsonify({"error": str(e)}), 500
 
 # ---- RUN ----
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True, port=5000)
+init_db()  # runs for both gunicorn and direct python
 
-# ---- INIT DB ON STARTUP (for gunicorn) ----
-init_db()
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
