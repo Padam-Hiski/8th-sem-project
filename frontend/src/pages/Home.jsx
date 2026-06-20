@@ -21,12 +21,12 @@ const steps = {
   en: [
     { number: '01', title: 'Upload a Leaf Photo', desc: 'Take a clear photo of the affected leaf and upload it directly from your device.' },
     { number: '02', title: 'AI Analyzes the Image', desc: 'Our MobileNetV2 model scans the leaf and identifies signs of disease within seconds.' },
-    { number: '03', title: 'Get Results & Treatment', desc: 'See the detected disease, confidence score, symptoms, and recommended treatment steps.' },
+    { number: '03', title: 'Get Results & Treatment', desc: 'See the detected disease, confidence score, symptoms, and get AI-powered treatment advice and prevention tips.' },
   ],
   np: [
     { number: '01', title: 'पात फोटो अपलोड गर्नुहोस्', desc: 'रोगग्रस्त पातको स्पष्ट फोटो खिचेर आफ्नो उपकरणबाट सिधै अपलोड गर्नुहोस्।' },
     { number: '02', title: 'AI ले छवि विश्लेषण गर्छ', desc: 'हाम्रो MobileNetV2 मोडलले पात स्क्यान गरी केही सेकेन्डमा रोगका संकेत पहिचान गर्छ।' },
-    { number: '03', title: 'नतिजा र उपचार पाउनुहोस्', desc: 'पत्ता लागेको रोग, कन्फिडेन्स स्कोर, लक्षण र उपचार सुझाव हेर्नुहोस्।' },
+    { number: '03', title: 'नतिजा र उपचार पाउनुहोस्', desc: 'पत्ता लागेको रोग, कन्फिडेन्स स्कोर, लक्षण हेर्नुहोस् र AI-संचालित उपचार सल्लाह तथा रोकथाम सुझाव पाउनुहोस्।' },
   ],
 };
 
@@ -34,48 +34,48 @@ const text = {
   en: {
     title: 'Crop Disease Detector',
     subtitle: 'An AI-powered tool that detects diseases in crop leaves from a single photo. Built to help farmers and agricultural workers identify problems early and take action fast.',
-    stats: 'Trained on 58,134 images · 40+ disease classes ·  91.83% accuracy',
+    stats: 'Trained on 58,134 images · 44 disease classes · 91.83% accuracy',
     cta: '🔍 Detect Disease Now',
     howTitle: 'How It Works',
     cropsTitle: 'Supported Crops',
     cropsSubtitle: 'The model can detect diseases across these 12 crops',
     modelTitle: 'About the Model',
     modelP1: 'This project uses MobileNetV2, a lightweight deep learning architecture optimized for image classification. The model was trained on the PlantVillage dataset, one of the most widely used public datasets for plant disease detection research.',
-    modelP2: 'Transfer learning was applied — the base model was pre-trained on ImageNet, then fine-tuned on 54,305 leaf images across 38 disease classes. Training was done for 10 epochs using TensorFlow on a local machine.',
+    modelP2: 'Transfer learning was applied — the base model was pre-trained on ImageNet, then fine-tuned on 58,134 leaf images across 44 disease classes including 6 rice disease classes. Training was done for 12 epochs using TensorFlow on a local machine.',
     modelP3: 'Scope note: The model is trained on controlled lab images from the PlantVillage dataset. Real-field performance may vary based on lighting, image angle, and crop varieties specific to Nepal. This is documented as a known limitation.',
-    accuracy: 'Accuracy',
+    accuracy: 'Val. Accuracy',
     classes: 'Disease Classes',
     images: 'Training Images',
     ctaBottom: 'Ready to detect a disease?',
-    ctaBottomSub: 'Upload a leaf photo and get results in seconds.',
+    ctaBottomSub: 'Upload a leaf photo and get AI-powered results in seconds.',
     getStarted: 'Get Started →',
-    footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2',
-    // in en:
-dashboard: ' View Analytics Dashboard',
-
-
+    footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2 + Gemini AI',
+    dashboard: 'View Analytics Dashboard',
+    navHistory: 'History',
+    navDashboard: 'Dashboard',
   },
   np: {
     title: 'बाली रोग पहिचानकर्ता',
     subtitle: 'एउटै फोटोबाट बालीका पातमा रोग पत्ता लगाउने AI-संचालित उपकरण। किसान र कृषि कार्यकर्तालाई समस्या छिटो पहिचान गर्न सहयोग गर्छ।',
-    stats: '५८,१३४ छविहरूमा प्रशिक्षित · ४०+ रोग वर्गहरू · ९१.८३% सटीकता',
+    stats: '५८,१३४ छविहरूमा प्रशिक्षित · ४४ रोग वर्गहरू · ९१.८३% सटीकता',
     cta: '🔍 रोग पहिचान गर्नुहोस्',
     howTitle: 'यसले कसरी काम गर्छ',
     cropsTitle: 'समर्थित बालीहरू',
     cropsSubtitle: 'मोडलले यी १२ बालीहरूमा रोग पत्ता लगाउन सक्छ',
     modelTitle: 'मोडलको बारेमा',
     modelP1: 'यो परियोजनाले MobileNetV2 प्रयोग गर्छ, जो छवि वर्गीकरणका लागि अनुकूलित हल्का डीप लर्निङ आर्किटेक्चर हो। मोडललाई PlantVillage डेटासेटमा प्रशिक्षित गरिएको थियो।',
-    modelP2: 'ट्रान्सफर लर्निङ प्रयोग गरियो — बेस मोडललाई ImageNet मा प्री-ट्रेन गरेर ३८ रोग वर्गका ५४,३०५ पात छविहरूमा फाइन-ट्यून गरियो।',
+    modelP2: 'ट्रान्सफर लर्निङ प्रयोग गरियो — बेस मोडललाई ImageNet मा प्री-ट्रेन गरेर ४४ रोग वर्गका ५८,१३४ पात छविहरूमा फाइन-ट्यून गरियो, जसमा ६ धानको रोग वर्गहरू समावेश छन्। प्रशिक्षण १२ epoch का लागि TensorFlow प्रयोग गरी गरियो।',
     modelP3: 'दायरा नोट: मोडललाई PlantVillage डेटासेटका नियन्त्रित ल्याब छविहरूमा प्रशिक्षित गरिएको छ। वास्तविक क्षेत्रमा प्रदर्शन भिन्न हुन सक्छ।',
-    accuracy: 'सटीकता',
+    accuracy: 'भ्याल. सटीकता',
     classes: 'रोग वर्गहरू',
     images: 'प्रशिक्षण छविहरू',
     ctaBottom: 'रोग पहिचान गर्न तयार?',
-    ctaBottomSub: 'पातको फोटो अपलोड गर्नुहोस् र सेकेन्डमा नतिजा पाउनुहोस्।',
+    ctaBottomSub: 'पातको फोटो अपलोड गर्नुहोस् र AI-संचालित नतिजा पाउनुहोस्।',
     getStarted: 'सुरु गर्नुहोस् →',
-    footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 द्वारा संचालित',
-    // in np:
-dashboard: ' एनालिटिक्स ड्यासबोर्ड हेर्नुहोस्',
+    footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 + Gemini AI',
+    dashboard: 'एनालिटिक्स ड्यासबोर्ड हेर्नुहोस्',
+    navHistory: 'इतिहास',
+    navDashboard: 'ड्यासबोर्ड',
   },
 };
 
@@ -84,26 +84,45 @@ function Home() {
   const { darkMode, toggleDark, language, toggleLang } = useApp();
   const t = text[language];
   const currentSteps = steps[language];
-
   const dark = darkMode;
 
   return (
     <div className={`min-h-screen font-sans transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white text-gray-900'}`}>
 
-      {/* Top Bar — toggles */}
-      <div className={`flex justify-end gap-2 px-6 py-3 ${dark ? 'bg-gray-900' : 'bg-white'} border-b ${dark ? 'border-gray-700' : 'border-gray-100'}`}>
-        <button
-          onClick={toggleLang}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
-        >
-          {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
-        </button>
-        <button
-          onClick={toggleDark}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
-        >
-          {dark ? '☀️ Light' : '🌙 Dark'}
-        </button>
+      {/* Top Bar — nav + toggles */}
+      <div className={`flex items-center justify-between gap-2 px-6 py-3 ${dark ? 'bg-gray-900' : 'bg-white'} border-b ${dark ? 'border-gray-700' : 'border-gray-100'}`}>
+
+        {/* Left — nav links */}
+        <div className="flex gap-1">
+          <button
+            onClick={() => navigate('/history')}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}
+          >
+            📋 {t.navHistory}
+          </button>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}
+          >
+            📊 {t.navDashboard}
+          </button>
+        </div>
+
+        {/* Right — toggles */}
+        <div className="flex gap-2">
+          <button
+            onClick={toggleLang}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+          >
+            {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
+          </button>
+          <button
+            onClick={toggleDark}
+            className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
+          >
+            {dark ? '☀️ Light' : '🌙 Dark'}
+          </button>
+        </div>
       </div>
 
       {/* Hero */}
@@ -163,15 +182,15 @@ function Home() {
           <p className={`text-sm leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.modelP3}</p>
           <div className="mt-6 grid grid-cols-3 gap-4 text-center">
             <div>
-              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>94.22%</div>
+              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>91.83%</div>
               <div className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.accuracy}</div>
             </div>
             <div>
-              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>38</div>
+              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>44</div>
               <div className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.classes}</div>
             </div>
             <div>
-              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>54,305</div>
+              <div className={`text-2xl font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>58,134</div>
               <div className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.images}</div>
             </div>
           </div>
@@ -179,24 +198,24 @@ function Home() {
       </div>
 
       {/* Final CTA */}
-<div className="py-12 px-6 text-center bg-green-700">
-  <h2 className="text-2xl font-bold text-white mb-3">{t.ctaBottom}</h2>
-  <p className="text-green-200 mb-6 text-sm">{t.ctaBottomSub}</p>
-  <div className="flex flex-col items-center gap-3">
-    <button
-      onClick={() => navigate('/upload')}
-      className="bg-white text-green-700 font-semibold text-lg px-10 py-4 rounded-2xl shadow hover:bg-green-50 transition duration-200 w-64"
-    >
-      {t.getStarted}
-    </button>
-    <button
-      onClick={() => navigate('/dashboard')}
-      className="bg-transparent border border-green-400 text-green-200 font-medium text-sm px-8 py-3 rounded-2xl hover:bg-green-600 transition duration-200 w-64"
-    >
-      {t.dashboard}
-    </button>
-  </div>
-</div>
+      <div className="py-12 px-6 text-center bg-green-700">
+        <h2 className="text-2xl font-bold text-white mb-3">{t.ctaBottom}</h2>
+        <p className="text-green-200 mb-6 text-sm">{t.ctaBottomSub}</p>
+        <div className="flex flex-col items-center gap-3">
+          <button
+            onClick={() => navigate('/upload')}
+            className="bg-white text-green-700 font-semibold text-lg px-10 py-4 rounded-2xl shadow hover:bg-green-50 transition duration-200 w-64"
+          >
+            {t.getStarted}
+          </button>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="bg-transparent border border-green-400 text-green-200 font-medium text-sm px-8 py-3 rounded-2xl hover:bg-green-600 transition duration-200 w-64"
+          >
+            📊 {t.dashboard}
+          </button>
+        </div>
+      </div>
 
       {/* Footer */}
       <div className={`text-center py-8 text-xs ${dark ? 'bg-gray-900 text-gray-500' : 'bg-white text-gray-400'}`}>

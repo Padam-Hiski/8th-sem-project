@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import html2canvas from 'html2canvas';
 
-const API_URL = 'http://localhost:5000';
+// Fix — use env var, falls back to Railway for Vercel deployment
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5000';
 
 const text = {
   en: {
@@ -15,6 +16,7 @@ const text = {
     subtitle: 'Analysis complete',
     detected: 'Detected Disease',
     crop: 'Crop',
+    cause: '🧫 Cause',
     confidence: 'Model Confidence',
     highConf: '✅ High confidence result',
     modConf: '⚠️ Moderate confidence — verify manually',
@@ -22,7 +24,9 @@ const text = {
     about: '📋 About this Disease',
     symptoms: '🔍 Symptoms',
     treatment: '💊 Recommended Treatment',
+    prevention: '🛡️ Prevention',
     severity: 'Severity Level',
+    aiEnhanced: '✨ AI Enhanced',
     top3Title: '🔬 Prediction Analysis',
     top3Note: 'Top 3 of 44 disease classes',
     top3TopMatch: 'Top Match',
@@ -53,6 +57,7 @@ const text = {
     subtitle: 'विश्लेषण सम्पन्न',
     detected: 'पत्ता लागेको रोग',
     crop: 'बाली',
+    cause: '🧫 कारण',
     confidence: 'मोडल कन्फिडेन्स',
     highConf: '✅ उच्च कन्फिडेन्स नतिजा',
     modConf: '⚠️ मध्यम कन्फिडेन्स — म्यानुअल जाँच गर्नुहोस्',
@@ -60,7 +65,9 @@ const text = {
     about: '📋 यो रोगको बारेमा',
     symptoms: '🔍 लक्षणहरू',
     treatment: '💊 सिफारिश उपचार',
+    prevention: '🛡️ रोकथाम',
     severity: 'गम्भीरता स्तर',
+    aiEnhanced: '✨ AI उन्नत',
     top3Title: '🔬 अनुमान विश्लेषण',
     top3Note: '४४ रोग वर्गहरूमध्ये शीर्ष ३',
     top3TopMatch: 'शीर्ष मिलान',
@@ -121,6 +128,20 @@ const getBarColor = (confidence, index) => {
   if (confidence >= 85) return '#16a34a';
   if (confidence >= 60) return '#d97706';
   return '#dc2626';
+};
+
+// Fix — severity badge handles all cases including "None" from Gemini
+const getSeverityStyle = (severity) => {
+  if (!severity || severity === 'None' || severity === 'N/A') {
+    return { bg: 'bg-gray-100', text: 'text-gray-500', label: 'N/A — Healthy' };
+  }
+  if (severity === 'High' || severity === 'Very High') {
+    return { bg: 'bg-red-100', text: 'text-red-600', label: severity };
+  }
+  if (severity === 'Medium') {
+    return { bg: 'bg-yellow-100', text: 'text-yellow-700', label: severity };
+  }
+  return { bg: 'bg-green-100', text: 'text-green-700', label: severity };
 };
 
 // ─── Top3Bars Sub-component ────────────────────────────────
@@ -217,11 +238,10 @@ function Result() {
   const [feedbackError,     setFeedbackError]     = useState(false);
   const [feedbackLoading,   setFeedbackLoading]   = useState(false);
   const [downloading,       setDownloading]       = useState(false);
-  const [animated,          setAnimated]          = useState(false);   // ← NEW
+  const [animated,          setAnimated]          = useState(false);
 
   const resultCardRef = useRef(null);
 
-  // Trigger bar animation after mount
   useEffect(() => {
     const timer = setTimeout(() => setAnimated(true), 150);
     return () => clearTimeout(timer);
@@ -313,17 +333,12 @@ function Result() {
           {preview && (
             <img src={preview} alt="Uploaded" className="max-h-48 mx-auto rounded-xl mb-6 object-contain" />
           )}
-
-          {/* Top 3 shown even on low confidence */}
           {result.top3 && result.top3.length > 0 && (
             <div className={`rounded-2xl p-5 mb-6 border text-left ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-              <p className={`text-sm font-semibold mb-4 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t.top3Title}
-              </p>
+              <p className={`text-sm font-semibold mb-4 ${dark ? 'text-gray-300' : 'text-gray-700'}`}>{t.top3Title}</p>
               <Top3Bars top3={result.top3} animated={animated} dark={dark} t={t} />
             </div>
           )}
-
           <div className={`border rounded-xl px-5 py-4 text-left mb-6 ${dark ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-200'}`}>
             <p className={`font-semibold text-sm mb-2 ${dark ? 'text-yellow-300' : 'text-yellow-800'}`}>{t.tipsTitle}</p>
             <ul className={`text-xs space-y-1 list-disc list-inside ${dark ? 'text-yellow-400' : 'text-yellow-700'}`}>
@@ -342,7 +357,15 @@ function Result() {
   const { predicted_class, confidence, disease, top3 } = result;
   const confidencePercent = parseFloat(confidence).toFixed(1);
   const confidenceRaw     = confidence / 100;
-  const barColor          = confidenceRaw >= 0.85 ? 'bg-green-500' : confidenceRaw >= 0.60 ? 'bg-yellow-400' : 'bg-red-400';
+  const mainBarColor      = confidenceRaw >= 0.85 ? '#16a34a' : confidenceRaw >= 0.60 ? '#d97706' : '#dc2626';
+  const severityStyle     = getSeverityStyle(disease?.severity);
+
+  // Fix — parse symptoms whether string or array
+  const symptomsArray = disease?.symptoms
+    ? Array.isArray(disease.symptoms)
+      ? disease.symptoms
+      : disease.symptoms.split('. ').filter(Boolean).map(s => s.endsWith('.') ? s : `${s}.`)
+    : [];
 
   return (
     <div className={`min-h-screen px-6 py-12 transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white'}`}>
@@ -362,7 +385,7 @@ function Result() {
           <img src={preview} alt="Analyzed leaf" className="w-full max-h-56 object-contain rounded-2xl shadow mb-6" />
         )}
 
-        {/* Disease Name */}
+        {/* Disease Name + AI Badge */}
         <div className={`rounded-2xl shadow-sm p-6 mb-4 text-center border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
           <p className={`text-xs uppercase tracking-widest mb-1 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.detected}</p>
           <h2 className={`text-2xl font-extrabold ${dark ? 'text-green-400' : 'text-green-800'}`}>
@@ -371,28 +394,44 @@ function Result() {
           {disease?.crop && (
             <p className={`text-sm mt-1 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.crop}: {disease.crop}</p>
           )}
+          {/* Fix — AI Enhanced badge using disease_source */}
+          {result.disease_source === 'gemini' && (
+            <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+              {t.aiEnhanced}
+            </span>
+          )}
+          {/* Cause row — only shown when Gemini provides it */}
+          {disease?.cause && (
+            <p className={`text-xs mt-3 px-4 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>
+              <span className="font-semibold">{t.cause}:</span> {disease.cause}
+            </p>
+          )}
         </div>
 
-        {/* Confidence Bar */}
+        {/* Fix — animated confidence bar, consistent with Top3 bars */}
         <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
           <div className="flex justify-between text-sm mb-2">
             <span className={`font-medium ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.confidence}</span>
-            <span className={`font-bold ${dark ? 'text-green-400' : 'text-green-700'}`}>{confidencePercent}%</span>
+            <span className="font-bold" style={{ color: mainBarColor }}>{confidencePercent}%</span>
           </div>
-          <div className={`w-full rounded-full h-3 ${dark ? 'bg-gray-700' : 'bg-gray-100'}`}>
-            <div className={`${barColor} h-3 rounded-full`} style={{ width: `${confidencePercent}%` }} />
+          <div className={`w-full rounded-full h-3 overflow-hidden ${dark ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <div style={{
+              height: '100%',
+              borderRadius: 999,
+              width: animated ? `${confidencePercent}%` : '0%',
+              backgroundColor: mainBarColor,
+              transition: 'width 0.8s cubic-bezier(0.4,0,0.2,1)',
+            }} />
           </div>
           <p className={`text-xs mt-2 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>
             {confidenceRaw >= 0.85 ? t.highConf : confidenceRaw >= 0.60 ? t.modConf : t.lowConf}
           </p>
         </div>
 
-        {/* ── TOP 3 PREDICTIONS ── NEW SECTION ── */}
+        {/* Top 3 Predictions */}
         {top3 && top3.length > 0 && (
           <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
-            <p className={`text-sm font-semibold mb-4 ${dark ? 'text-green-400' : 'text-green-800'}`}>
-              {t.top3Title}
-            </p>
+            <p className={`text-sm font-semibold mb-4 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.top3Title}</p>
             <Top3Bars top3={top3} animated={animated} dark={dark} t={t} />
           </div>
         )}
@@ -400,47 +439,56 @@ function Result() {
         {/* Disease Info */}
         {disease && (
           <>
+            {/* About */}
             {disease.description && (
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
                 <h3 className={`font-semibold mb-2 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.about}</h3>
                 <p className={`text-sm leading-relaxed ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{disease.description}</p>
               </div>
             )}
-            {Array.isArray(disease.symptoms) && disease.symptoms.length > 0 && (
+
+            {/* Fix — symptoms handles both string (Gemini) and array (diseases.json) */}
+            {symptomsArray.length > 0 && (
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
                 <h3 className={`font-semibold mb-3 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.symptoms}</h3>
-                <ul className="space-y-1">
-                  {disease.symptoms.map((s, i) => (
+                <ul className="space-y-2">
+                  {symptomsArray.map((s, i) => (
                     <li key={i} className={`text-sm flex items-start gap-2 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
-                      <span className="text-green-400 mt-0.5">•</span> {s}
+                      <span className="text-green-400 mt-0.5 flex-shrink-0">•</span> {s}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+
+            {/* Treatment */}
             {Array.isArray(disease.treatment) && disease.treatment.length > 0 && (
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-green-900 border-green-700' : 'bg-green-50 border-green-200'}`}>
                 <h3 className={`font-semibold mb-3 ${dark ? 'text-green-300' : 'text-green-800'}`}>{t.treatment}</h3>
-                <ul className="space-y-1">
-                  {disease.treatment.map((t_item, i) => (
+                <ul className="space-y-2">
+                  {disease.treatment.map((item, i) => (
                     <li key={i} className={`text-sm flex items-start gap-2 ${dark ? 'text-green-300' : 'text-green-700'}`}>
-                      <span className="mt-0.5">✓</span> {t_item}
+                      <span className="mt-0.5 flex-shrink-0">✓</span> {item}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+
+            {/* Fix — Prevention field from Gemini */}
+            {disease.prevention && (
+              <div className={`rounded-2xl shadow-sm p-6 mb-4 border ${dark ? 'bg-blue-900 border-blue-700' : 'bg-blue-50 border-blue-200'}`}>
+                <h3 className={`font-semibold mb-2 ${dark ? 'text-blue-300' : 'text-blue-800'}`}>{t.prevention}</h3>
+                <p className={`text-sm leading-relaxed ${dark ? 'text-blue-200' : 'text-blue-700'}`}>{disease.prevention}</p>
+              </div>
+            )}
+
+            {/* Fix — Severity badge handles None/N/A for healthy crops */}
             {disease.severity && (
               <div className={`rounded-2xl shadow-sm p-6 mb-4 border flex items-center justify-between ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
                 <span className={`font-medium text-sm ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.severity}</span>
-                <span className={`text-sm font-bold px-3 py-1 rounded-full ${
-                  disease.severity === 'High' || disease.severity === 'Very High'
-                    ? 'bg-red-100 text-red-600'
-                    : disease.severity === 'Medium'
-                    ? 'bg-yellow-100 text-yellow-700'
-                    : 'bg-green-100 text-green-700'
-                }`}>
-                  {disease.severity}
+                <span className={`text-sm font-bold px-3 py-1 rounded-full ${severityStyle.bg} ${severityStyle.text}`}>
+                  {severityStyle.label}
                 </span>
               </div>
             )}
@@ -466,38 +514,28 @@ function Result() {
         {result.prediction_id && (
           <div className={`rounded-2xl shadow-sm p-5 mb-4 border text-center ${dark ? 'bg-gray-800 border-gray-700' : 'bg-white border-green-100'}`}>
             {feedbackSubmitted ? (
-              <p className={`text-sm font-semibold ${dark ? 'text-green-400' : 'text-green-700'}`}>
-                {t.feedbackThanks}
-              </p>
+              <p className={`text-sm font-semibold ${dark ? 'text-green-400' : 'text-green-700'}`}>{t.feedbackThanks}</p>
             ) : (
               <>
-                <p className={`text-sm font-medium mb-3 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {t.feedbackTitle}
-                </p>
+                <p className={`text-sm font-medium mb-3 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.feedbackTitle}</p>
                 <div className="flex gap-3 justify-center">
                   <button
                     onClick={() => submitFeedback('correct')}
                     disabled={feedbackLoading}
-                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${
-                      dark ? 'border-green-600 text-green-400 hover:bg-green-900' : 'border-green-400 text-green-700 hover:bg-green-50'
-                    } disabled:opacity-50`}
+                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${dark ? 'border-green-600 text-green-400 hover:bg-green-900' : 'border-green-400 text-green-700 hover:bg-green-50'} disabled:opacity-50`}
                   >
                     {t.feedbackYes}
                   </button>
                   <button
                     onClick={() => submitFeedback('incorrect')}
                     disabled={feedbackLoading}
-                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${
-                      dark ? 'border-red-700 text-red-400 hover:bg-red-900' : 'border-red-300 text-red-600 hover:bg-red-50'
-                    } disabled:opacity-50`}
+                    className={`px-5 py-2 rounded-xl text-sm font-semibold border transition ${dark ? 'border-red-700 text-red-400 hover:bg-red-900' : 'border-red-300 text-red-600 hover:bg-red-50'} disabled:opacity-50`}
                   >
                     {t.feedbackNo}
                   </button>
                 </div>
                 {feedbackError && (
-                  <p className={`text-xs mt-2 ${dark ? 'text-red-400' : 'text-red-500'}`}>
-                    {t.feedbackError}
-                  </p>
+                  <p className={`text-xs mt-2 ${dark ? 'text-red-400' : 'text-red-500'}`}>{t.feedbackError}</p>
                 )}
               </>
             )}
@@ -508,9 +546,7 @@ function Result() {
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className={`w-full mb-3 border font-medium py-3 rounded-xl transition text-sm ${
-            dark ? 'border-gray-600 text-gray-300 hover:bg-gray-800' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-          } disabled:opacity-50`}
+          className={`w-full mb-3 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-800' : 'border-gray-300 text-gray-600 hover:bg-gray-50'} disabled:opacity-50`}
         >
           {downloading ? t.downloading : t.download}
         </button>
@@ -519,9 +555,7 @@ function Result() {
         <div className="flex gap-3">
           <button
             onClick={() => navigate('/upload')}
-            className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${
-              dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'
-            }`}
+            className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}
           >
             {t.analyzeAnother}
           </button>

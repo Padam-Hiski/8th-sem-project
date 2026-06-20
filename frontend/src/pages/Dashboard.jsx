@@ -6,7 +6,8 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-const API_URL = 'http://localhost:5000';
+// Fix 1 — correct Railway URL, works both locally and on Vercel
+const API_URL = process.env.REACT_APP_API_URL || 'https://8th-sem-project-production.up.railway.app';
 
 const text = {
   en: {
@@ -25,7 +26,7 @@ const text = {
     error: 'Could not load analytics. Is the backend running?',
     home: '🏠 Home',
     upload: '🔍 Scan a Crop',
-    footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2',
+    footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2 + Gemini AI',
     scans: 'scans',
     back: '← Back',
   },
@@ -45,7 +46,7 @@ const text = {
     error: 'एनालिटिक्स लोड गर्न सकिएन। ब्याकएन्ड चलिरहेको छ?',
     home: '🏠 गृहपृष्ठ',
     upload: '🔍 बाली स्क्यान गर्नुहोस्',
-    footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 द्वारा संचालित',
+    footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 + Gemini AI',
     scans: 'स्क्यानहरू',
     back: '← फिर्ता',
   },
@@ -53,6 +54,24 @@ const text = {
 
 const COLORS = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7', '#f0fdf4', '#15803d', '#166534', '#14532d'];
 const HEALTH_COLORS = ['#16a34a', '#dc2626'];
+
+// Fix 2 — CSS spinner instead of spinning emoji
+function Spinner({ dark }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4rem 0' }}>
+      <div style={{
+        width: 36,
+        height: 36,
+        border: `3px solid ${dark ? '#374151' : '#d1fae5'}`,
+        borderTop: `3px solid ${dark ? '#4ade80' : '#16a34a'}`,
+        borderRadius: '50%',
+        animation: 'spin 0.8s linear infinite',
+        marginBottom: 16,
+      }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
 
 function StatCard({ label, value, icon, dark }) {
   return (
@@ -108,7 +127,6 @@ function Dashboard() {
       });
   }, []);
 
-  // Shorten long disease names for chart
   const shortenName = (name) => {
     return name
       .replace(/_/g, ' ')
@@ -173,13 +191,8 @@ function Dashboard() {
           <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.subtitle}</p>
         </div>
 
-        {/* Loading */}
-        {loading && (
-          <div className="text-center py-16">
-            <div className="text-4xl mb-4 animate-spin">🌿</div>
-            <p className={`text-sm ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.loading}</p>
-          </div>
-        )}
+        {/* Fix 2 — CSS spinner instead of spinning emoji */}
+        {loading && <Spinner dark={dark} />}
 
         {/* Error */}
         {error && (
@@ -206,32 +219,11 @@ function Dashboard() {
         {/* Stats */}
         {!loading && !error && stats?.total_scans > 0 && (
           <>
-            {/* Stat Cards */}
             <div className="grid grid-cols-2 gap-4 mb-5">
-              <StatCard
-                label={t.totalScans}
-                value={stats.total_scans}
-                icon="🔍"
-                dark={dark}
-              />
-              <StatCard
-                label={t.avgConfidence}
-                value={`${stats.avg_confidence}%`}
-                icon="🎯"
-                dark={dark}
-              />
-              <StatCard
-                label={t.healthy}
-                value={stats.healthy_vs_diseased.healthy}
-                icon="✅"
-                dark={dark}
-              />
-              <StatCard
-                label={t.diseased}
-                value={stats.healthy_vs_diseased.diseased}
-                icon="🦠"
-                dark={dark}
-              />
+              <StatCard label={t.totalScans} value={stats.total_scans} icon="🔍" dark={dark} />
+              <StatCard label={t.avgConfidence} value={`${stats.avg_confidence}%`} icon="🎯" dark={dark} />
+              <StatCard label={t.healthy} value={stats.healthy_vs_diseased.healthy} icon="✅" dark={dark} />
+              <StatCard label={t.diseased} value={stats.healthy_vs_diseased.diseased} icon="🦠" dark={dark} />
             </div>
 
             {/* Disease Bar Chart */}
@@ -254,25 +246,28 @@ function Dashboard() {
               </SectionCard>
             )}
 
-            {/* Crop Pie Chart */}
+            {/* Fix 3 — Crop Pie: removed overlapping labels, Legend only */}
             {cropData.length > 0 && (
               <SectionCard title={t.cropChart} dark={dark}>
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={240}>
                   <PieChart>
                     <Pie
                       data={cropData}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"
-                      cy="50%"
+                      cy="45%"
                       outerRadius={80}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      labelLine={true}
                     >
                       {cropData.map((_, index) => (
                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
+                    <Legend
+                      formatter={(value) => (
+                        <span style={{ color: dark ? '#9ca3af' : '#6b7280', fontSize: 12 }}>{value}</span>
+                      )}
+                    />
                     <Tooltip content={<CustomTooltip dark={dark} />} />
                   </PieChart>
                 </ResponsiveContainer>
@@ -309,7 +304,7 @@ function Dashboard() {
               </SectionCard>
             )}
 
-            {/* Confidence Distribution Bar Chart */}
+            {/* Confidence Distribution */}
             {confData.length > 0 && (
               <SectionCard title={t.confChart} dark={dark}>
                 <ResponsiveContainer width="100%" height={160}>

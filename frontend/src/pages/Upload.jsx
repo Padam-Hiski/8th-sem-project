@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useApp } from '../AppContext';
 
+const API_URL = process.env.REACT_APP_API_URL || 
+  'https://8th-sem-project-production.up.railway.app';
 const MAX_SIZE_MB = 5;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
@@ -10,6 +12,7 @@ const text = {
   en: {
     back: '← Back to Home',
     title: 'Upload Leaf Photo',
+    navHistory: '📋 History',
     subtitle: 'Upload an existing photo or take one using your camera for instant analysis.',
     dropText: 'Click or drag & drop an image here',
     dropSub: 'Supports JPG, PNG · Max size: 5MB',
@@ -28,6 +31,7 @@ const text = {
   np: {
     back: '← गृहपृष्ठमा फर्कनुहोस्',
     title: 'पातको फोटो अपलोड गर्नुहोस्',
+    navHistory: '📋 इतिहास',
     subtitle: 'तत्काल विश्लेषणको लागि फोटो अपलोड गर्नुहोस् वा क्यामेराबाट खिच्नुहोस्।',
     dropText: 'यहाँ क्लिक गर्नुहोस् वा छवि ड्र्याग & ड्रप गर्नुहोस्',
     dropSub: 'JPG, PNG समर्थित · अधिकतम साइज: ५MB',
@@ -76,15 +80,17 @@ reader.readAsDataURL(file);
   const handleDrop = (e) => { e.preventDefault(); processFile(e.dataTransfer.files[0]); };
 
   const handleSubmit = async () => {
-    console.log('Submit clicked, image:', image); // ADD THIS
-    console.log('Image type:', typeof image, image instanceof File);
+
+    //test code
+    // console.log('Submit clicked, image:', image); // ADD THIS
+    // console.log('Image type:', typeof image, image instanceof File);
     if (!image) { setError(t.errorNoImage); return; }
     setLoading(true);
     setError(null);
     const formData = new FormData();
     formData.append('image', image);
     try {
-      const response = await axios.post('https://8th-sem-project-production.up.railway.app/predict', formData, {
+      const response = await axios.post(`${API_URL}/predict`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       navigate('/result', { state: { result: response.data, preview } });
@@ -112,7 +118,7 @@ reader.readAsDataURL(file);
           {dark ? '☀️ Light' : '🌙 Dark'}
         </button>
         <button onClick={() => navigate('/history')} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-    📋 History
+    {t.navHistory}
   </button>
       </div>
 
