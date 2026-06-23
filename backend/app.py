@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all()
 import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -16,6 +18,7 @@ tf.config.threading.set_inter_op_parallelism_threads(1)
 tf.config.threading.set_intra_op_parallelism_threads(1)
 from dotenv import load_dotenv
 import requests
+
 
 load_dotenv()
 
