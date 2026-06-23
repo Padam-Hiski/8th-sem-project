@@ -59,6 +59,9 @@ with open("database/diseases.json", "r") as f:
 # ---- LOAD MODEL ----
 print("Loading model...")
 MODEL = tf.keras.models.load_model("model/crop_disease_model_v2.h5")
+dummy = np.zeros((1, 224, 224, 3), dtype="float32")
+MODEL.predict(dummy, verbose=0)
+print("Model warmed up!")
 print("Model loaded successfully!")
 
 # ---- CONFIDENCE THRESHOLD ----
