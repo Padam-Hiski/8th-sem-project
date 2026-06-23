@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useApp } from '../AppContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 
-   'https://eightth-sem-project-whe8.onrender.com';
+   'https://padamd3ploy-production.hf.space/';
 const MAX_SIZE_MB = 5;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 

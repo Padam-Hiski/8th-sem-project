@@ -6,8 +6,8 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-// Fix 1 — correct Railway URL, works both locally and on Vercel
-const API_URL = process.env.REACT_APP_API_URL ||  'https://eightth-sem-project-whe8.onrender.com';
+
+const API_URL = process.env.REACT_APP_API_URL ;
 
 const text = {
   en: {
