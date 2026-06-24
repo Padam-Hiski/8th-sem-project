@@ -24,7 +24,7 @@ app = Flask(__name__)
 
 # CORS — allow all origins explicitly
 CORS(app,
-    resources={r"/*": {"origins": "*"}},
+    origins=["https://8th-sem-project.vercel.app", "*"],
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "OPTIONS"],
     supports_credentials=False

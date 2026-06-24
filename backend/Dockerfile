@@ -24,4 +24,4 @@ RUN mkdir -p database
 EXPOSE 7860
 
 # Run with gunicorn
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:7860", "--timeout", "300", "--workers", "1", "--preload"]
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:7860", "--timeout", "300", "--workers", "1", "--worker-class", "gthread", "--threads", "4", "--preload"]
