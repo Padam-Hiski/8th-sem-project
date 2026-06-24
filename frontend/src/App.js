@@ -11,7 +11,7 @@ import History from './pages/History';
 
 function App() {
   useEffect(() => {
-    fetch('https://eightth-sem-project-whe8.onrender.com')
+    fetch('https://padamd3ploy-production.hf.space')
       .catch(() => {});
   }, []);
 
