@@ -90,6 +90,7 @@ reader.readAsDataURL(file);
     const formData = new FormData();
     formData.append('image', image);
     try {
+      console.log("im here")
       const response = await axios.post(`${API_URL}/predict`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });

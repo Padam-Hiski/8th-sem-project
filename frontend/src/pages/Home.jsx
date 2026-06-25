@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
+import logo from '../logo/nav logo.png';
 
 const crops = [
   { emoji: '🍅', name: 'Tomato', nameNp: 'टमाटर' },
@@ -89,41 +90,41 @@ function Home() {
   return (
     <div className={`min-h-screen font-sans transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white text-gray-900'}`}>
 
-      {/* Top Bar — nav + toggles */}
-      <div className={`flex items-center justify-between gap-2 px-6 py-3 ${dark ? 'bg-gray-900' : 'bg-white'} border-b ${dark ? 'border-gray-700' : 'border-gray-100'}`}>
+      {/* Top Bar */}
+<div className={`flex items-center justify-between px-6 py-0 h-14 border-b ${dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}>
 
-        {/* Left — nav links */}
-        <div className="flex gap-1">
-          <button
-            onClick={() => navigate('/history')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}
-          >
-            📋 {t.navHistory}
-          </button>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}
-          >
-            📊 {t.navDashboard}
-          </button>
-        </div>
+  {/* Left — Logo */}
+  <div className="flex items-center gap-2.5">
+    <img 
+      src={logo} 
+      alt="CropGuard logo" 
+      className="w-8 h-8 rounded-lg object-contain"
+    />
+    <span className={`text-sm font-semibold ${dark ? 'text-white' : 'text-gray-800'}`}>CropGuard</span>
+  </div>
 
-        {/* Right — toggles */}
-        <div className="flex gap-2">
-          <button
-            onClick={toggleLang}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
-          >
-            {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
-          </button>
-          <button
-            onClick={toggleDark}
-            className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}
-          >
-            {dark ? '☀️ Light' : '🌙 Dark'}
-          </button>
-        </div>
-      </div>
+  {/* Right — Nav + Toggles */}
+  <div className="flex items-center gap-1">
+    <button onClick={() => navigate('/history')}
+      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}>
+      📋 {t.navHistory}
+    </button>
+    <button onClick={() => navigate('/dashboard')}
+      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}>
+      📊 {t.navDashboard}
+    </button>
+    <div className={`w-px h-5 mx-1 ${dark ? 'bg-gray-700' : 'bg-gray-200'}`}></div>
+    <button onClick={toggleLang}
+      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
+      {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
+    </button>
+    <button onClick={toggleDark}
+      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
+      {dark ? '☀️ Light' : '🌙 Dark'}
+    </button>
+  </div>
+
+</div>
 
       {/* Hero */}
       <div className="flex flex-col items-center justify-center text-center px-6 pt-16 pb-12">
@@ -208,12 +209,7 @@ function Home() {
           >
             {t.getStarted}
           </button>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="bg-transparent border border-green-400 text-green-200 font-medium text-sm px-8 py-3 rounded-2xl hover:bg-green-600 transition duration-200 w-64"
-          >
-            📊 {t.dashboard}
-          </button>
+          
         </div>
       </div>
 
