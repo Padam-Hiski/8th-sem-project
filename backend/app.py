@@ -21,6 +21,7 @@ import requests
 load_dotenv()
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max upload
 
 # CORS — allow all origins explicitly
 CORS(app,
@@ -187,6 +188,11 @@ def predict():
     if file.filename == "":
         return jsonify({"error": "No image selected"}), 400
 
+    ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp'}
+    if '.' not in file.filename or \
+       file.filename.rsplit('.', 1)[1].lower() not in ALLOWED_EXTENSIONS:
+        return jsonify({"error": "Invalid file type. Please upload JPG or PNG."}), 400
+
     try:
         image = Image.open(file.stream)
         prepared = prepare_image(image)
@@ -323,7 +329,7 @@ def stats():
 
     except Exception as e:
         print("STATS ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Could not load stats."}), 500
 
 # ---- HISTORY ENDPOINT ----
 @app.route("/history", methods=["GET"])
@@ -355,7 +361,7 @@ def history():
 
     except Exception as e:
         print("HISTORY ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Could not load history."}), 500
 
 # ---- FEEDBACK ENDPOINT ----
 @app.route("/feedback", methods=["POST"])
@@ -366,8 +372,16 @@ def feedback():
         if not data:
             return jsonify({"error": "No data provided"}), 400
 
+        # TO:
         prediction_id = data.get("prediction_id")
         fb = data.get("feedback")
+
+        try:
+            prediction_id = int(prediction_id)
+            if prediction_id <= 0:
+                raise ValueError
+        except (TypeError, ValueError):
+            return jsonify({"error": "Invalid prediction_id."}), 400
 
         if not prediction_id or fb not in ("correct", "incorrect"):
             return jsonify({"error": "prediction_id and feedback ('correct'/'incorrect') are required"}), 400
@@ -391,7 +405,7 @@ def feedback():
 
     except Exception as e:
         print("FEEDBACK ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Could not save feedback."}), 500
 
 # ---- RUN ----
 init_db()  # runs for both gunicorn and direct python
