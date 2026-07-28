@@ -90,18 +90,25 @@ reader.readAsDataURL(file);
     const formData = new FormData();
     formData.append('image', image);
     try {
-      console.log("im here")
+      
       const response = await axios.post(`${API_URL}/predict`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       navigate('/result', { state: { result: response.data, preview } });
     }
-     catch (err) {
-      console.error('Full error:', err);
-      console.error('Response:', err.response);
-      console.error('Status:', err.response?.status);
-      setError(t.errorBackend);
-    } 
+    catch (err) {
+    console.error('Full error:', err);
+    console.error('Response:', err.response);
+    console.error('Status:', err.response?.status);
+
+    if (err.response?.data?.status === 'not_a_plant') {
+        setError('No plant leaf detected. Please upload a clear photo of a crop leaf. 🌿');
+    } else if (err.response?.data?.status === 'low_confidence') {
+        setError('Image unclear. Please retake in better lighting.');
+    } else {
+        setError(t.errorBackend);
+    }
+}
      finally {
       setLoading(false);
     }

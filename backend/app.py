@@ -5,6 +5,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import json
 import sqlite3
 import numpy as np
+import base64                          # ← NEW: needed for Gemini vision check
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -43,6 +44,7 @@ limiter = Limiter(
     app=app,
     default_limits=["200 per hour"]
 )
+
 # ---- GEMINI SETUP ----
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
@@ -118,6 +120,67 @@ def save_prediction(predicted_class, confidence, crop_type):
     conn.close()
     return prediction_id
 
+
+# ════════════════════════════════════════════════════════
+# ---- NEW: PLANT IMAGE VERIFICATION USING GEMINI VISION ----
+# Checks if the uploaded image actually contains a plant
+# leaf before running the ML model. Prevents non-plant
+# images (people, objects, blank images) from being
+# classified as crop diseases.
+# ════════════════════════════════════════════════════════
+def is_plant_image(image_bytes):
+    """
+    Uses Gemini Vision to verify the uploaded image contains
+    a plant leaf. Returns True if plant detected, False otherwise.
+    Falls back to True (allow) if Gemini is unavailable.
+    """
+    if not GEMINI_API_KEY:
+        return True  # no API key — skip check, allow through
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+
+    # Convert image bytes to base64 for Gemini Vision
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+
+    payload = {
+        "contents": [{
+            "parts": [
+                {
+                    "inline_data": {
+                        "mime_type": "image/jpeg",
+                        "data": image_base64
+                    }
+                },
+                {
+                    "text": (
+                        "Does this image show a plant leaf or crop leaf? "
+                        "Reply with only YES or NO. "
+                        "YES if it shows any plant, leaf, crop, or agricultural plant part. "
+                        "NO if it shows anything else such as a person, object, animal, "
+                        "blank image, text, or non-plant content."
+                    )
+                }
+            ]
+        }],
+        "generationConfig": {
+            "temperature": 0,
+            "maxOutputTokens": 5
+        }
+    }
+
+    try:
+        response = requests.post(url, json=payload, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        answer = data["candidates"][0]["content"]["parts"][0]["text"].strip().upper()
+        print(f"Plant check result: {answer}")
+        return answer.startswith("YES")
+    except Exception as e:
+        print(f"Plant verification error: {e}")
+        return True  # on error, allow through (fail open — don't block valid users)
+# ════════════════════════════════════════════════════════
+
+
 # ---- GEMINI DISEASE INFO ----
 def get_disease_info_gemini(predicted_class, confidence):
     """Fetch enriched disease info from Gemini via REST API. Returns None on failure."""
@@ -179,7 +242,7 @@ def predict_options():
 @app.route("/predict", methods=["POST"])
 @limiter.limit("20 per minute")
 def predict():
-    
+
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
@@ -194,7 +257,31 @@ def predict():
         return jsonify({"error": "Invalid file type. Please upload JPG or PNG."}), 400
 
     try:
-        image = Image.open(file.stream)
+        # ════════════════════════════════════════════════════════
+        # ---- NEW: READ IMAGE BYTES ONCE, USE FOR BOTH CHECKS ----
+        # Read the full file into memory so we can:
+        # 1. Send bytes to Gemini for plant verification
+        # 2. Reuse the same bytes for PIL image processing
+        # Without this, file.stream can only be read once.
+        # ════════════════════════════════════════════════════════
+        image_bytes = file.stream.read()
+
+        # ════════════════════════════════════════════════════════
+        # ---- NEW: PLANT VERIFICATION GATE ----
+        # Before running the ML model, verify the image actually
+        # contains a plant leaf using Gemini Vision.
+        # Non-plant images are rejected here with a clear message.
+        # ════════════════════════════════════════════════════════
+        if not is_plant_image(image_bytes):
+            return jsonify({
+                "status": "not_a_plant",
+                "message": "No plant leaf detected in the image. Please upload a clear photo of a crop leaf."
+            }), 400
+        # ════════════════════════════════════════════════════════
+
+        # ---- Continue with PIL using the bytes we already read ----
+        import io
+        image = Image.open(io.BytesIO(image_bytes))   # ← NEW: use BytesIO instead of file.stream
         prepared = prepare_image(image)
 
         predictions = MODEL.predict(prepared)
@@ -225,7 +312,6 @@ def predict():
         disease_info = get_disease_info_gemini(predicted_class, round(confidence * 100, 2))
 
         if disease_info is None:
-            # Fallback to diseases.json
             disease_info = DISEASES.get(predicted_class, {
                 "name": predicted_class.replace("_", " "),
                 "crop": "Unknown",
@@ -249,14 +335,14 @@ def predict():
             "predicted_class": predicted_class,
             "confidence": round(confidence * 100, 2),
             "disease": disease_info,
-            "disease_source": disease_source,  # tells frontend if Gemini or fallback was used
+            "disease_source": disease_source,
             "top3": top3
         }
         return jsonify(response)
 
     except Exception as e:
         print("ERROR:", str(e))
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Prediction failed. Please try again."}), 500
 
 # ---- STATS ENDPOINT ----
 @app.route("/stats", methods=["GET"])
@@ -372,7 +458,6 @@ def feedback():
         if not data:
             return jsonify({"error": "No data provided"}), 400
 
-        # TO:
         prediction_id = data.get("prediction_id")
         fb = data.get("feedback")
 
@@ -408,7 +493,7 @@ def feedback():
         return jsonify({"error": "Could not save feedback."}), 500
 
 # ---- RUN ----
-init_db()  # runs for both gunicorn and direct python
+init_db()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", port=7860, debug=False, threaded=True)
