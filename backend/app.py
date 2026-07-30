@@ -5,7 +5,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import json
 import sqlite3
 import numpy as np
-import base64                          # ← NEW: needed for Gemini vision check
+import base64
+import io
 from datetime import datetime
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -71,6 +72,9 @@ print("Model loaded successfully!")
 # ---- CONFIDENCE THRESHOLD ----
 CONFIDENCE_THRESHOLD = 0.60
 
+# ---- CROPS THIS SYSTEM SUPPORTS (used in Gemini validation prompt) ----
+VALID_CROPS = "tomato, potato, corn, apple, grape, pepper, cherry, peach, strawberry, blueberry, raspberry, squash, soybean, orange, rice"
+
 # ---- DATABASE SETUP ----
 DB_PATH = "database/predictions.db"
 
@@ -122,79 +126,48 @@ def save_prediction(predicted_class, confidence, crop_type):
 
 
 # ════════════════════════════════════════════════════════
-# ---- NEW: PLANT IMAGE VERIFICATION USING GEMINI VISION ----
-# Checks if the uploaded image actually contains a plant
-# leaf before running the ML model. Prevents non-plant
-# images (people, objects, blank images) from being
-# classified as crop diseases.
+# ---- GEMINI: VALIDATE + ENRICH IN ONE CALL ----
+# Replaces the old separate is_plant_image() + get_disease_info_gemini()
+# pair. Runs AFTER the local model has already predicted a class, so
+# Gemini can check the image against that SPECIFIC class/crop list
+# instead of the old generic "is this any plant" question (which is
+# why flowers used to slip through). Cuts two Gemini round-trips
+# down to one, reducing per-request latency and timeout risk.
 # ════════════════════════════════════════════════════════
-def is_plant_image(image_bytes):
+def analyze_with_gemini(image_bytes, predicted_class, confidence):
     """
-    Uses Gemini Vision to verify the uploaded image contains
-    a plant leaf. Returns True if plant detected, False otherwise.
-    Falls back to True (allow) if Gemini is unavailable.
+    Single Gemini Vision call that both validates the image matches
+    a real crop leaf (rejecting flowers/blanks/unrelated objects) AND
+    returns enriched disease info, conditioned on the model's own
+    predicted_class. Returns a dict with is_valid_leaf + disease fields,
+    or None on API failure (caller falls back to diseases.json).
     """
-    if not GEMINI_API_KEY:
-        return True  # no API key — skip check, allow through
-
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-
-    # Convert image bytes to base64 for Gemini Vision
-    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-
-    payload = {
-        "contents": [{
-            "parts": [
-                {
-                    "inline_data": {
-                        "mime_type": "image/jpeg",
-                        "data": image_base64
-                    }
-                },
-                {
-                    "text": (
-                        "Does this image show a plant leaf or crop leaf? "
-                        "Reply with only YES or NO. "
-                        "YES if it shows any plant, leaf, crop, or agricultural plant part. "
-                        "NO if it shows anything else such as a person, object, animal, "
-                        "blank image, text, or non-plant content."
-                    )
-                }
-            ]
-        }],
-        "generationConfig": {
-            "temperature": 0,
-            "maxOutputTokens": 5
-        }
-    }
-
-    try:
-        response = requests.post(url, json=payload, timeout=10)
-        response.raise_for_status()
-        data = response.json()
-        answer = data["candidates"][0]["content"]["parts"][0]["text"].strip().upper()
-        print(f"Plant check result: {answer}")
-        return answer.startswith("YES")
-    except Exception as e:
-        print(f"Plant verification error: {e}")
-        return True  # on error, allow through (fail open — don't block valid users)
-# ════════════════════════════════════════════════════════
-
-
-# ---- GEMINI DISEASE INFO ----
-def get_disease_info_gemini(predicted_class, confidence):
-    """Fetch enriched disease info from Gemini via REST API. Returns None on failure."""
     if not GEMINI_API_KEY:
         return None
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
 
-    prompt = f"""You are an agricultural expert assistant. A crop disease detection AI identified:
-- Disease/Condition: {predicted_class.replace("_", " ")}
+    prompt = f"""You are an agricultural expert assistant reviewing a crop leaf image.
+
+A local ML classifier analyzed this image and predicted:
+- Class: {predicted_class.replace("_", " ")}
 - Confidence: {confidence:.1f}%
 
-Respond ONLY with a valid JSON object, no markdown, no backticks, no explanation. Format:
+Valid crops for this system are: {VALID_CROPS}
+
+Step 1 — Look at the actual image and judge whether it genuinely shows a leaf
+consistent with that prediction (or at least a real leaf from the valid crop
+list above). Reject it (is_valid_leaf: false) if the image is a flower,
+fruit, decorative plant, blank/blurry image, person, object, or anything
+that is not clearly a crop leaf matching or plausibly close to the claim.
+
+Step 2 — Only if valid, provide enriched info.
+
+Respond ONLY with valid JSON, no markdown, no backticks:
 {{
+  "is_valid_leaf": true or false,
+  "rejection_reason": "short reason if false, else empty string",
   "name": "human readable disease name",
   "crop": "crop name only",
   "cause": "one sentence cause (fungal/bacterial/viral/healthy)",
@@ -207,7 +180,12 @@ Respond ONLY with a valid JSON object, no markdown, no backticks, no explanation
 If the class contains 'healthy', set severity to 'None' and treatment to ['No treatment needed. Your crop looks healthy!']."""
 
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
+        "contents": [{
+            "parts": [
+                {"inline_data": {"mime_type": "image/jpeg", "data": image_base64}},
+                {"text": prompt}
+            ]
+        }],
         "generationConfig": {"temperature": 0.3, "maxOutputTokens": 1000}
     }
 
@@ -221,6 +199,8 @@ If the class contains 'healthy', set severity to 'None' and treatment to ['No tr
     except Exception as e:
         print(f"Gemini error: {e}")
         return None
+# ════════════════════════════════════════════════════════
+
 
 # ---- HELPER FUNCTION ----
 def prepare_image(image):
@@ -257,31 +237,9 @@ def predict():
         return jsonify({"error": "Invalid file type. Please upload JPG or PNG."}), 400
 
     try:
-        # ════════════════════════════════════════════════════════
-        # ---- NEW: READ IMAGE BYTES ONCE, USE FOR BOTH CHECKS ----
-        # Read the full file into memory so we can:
-        # 1. Send bytes to Gemini for plant verification
-        # 2. Reuse the same bytes for PIL image processing
-        # Without this, file.stream can only be read once.
-        # ════════════════════════════════════════════════════════
         image_bytes = file.stream.read()
 
-        # ════════════════════════════════════════════════════════
-        # ---- NEW: PLANT VERIFICATION GATE ----
-        # Before running the ML model, verify the image actually
-        # contains a plant leaf using Gemini Vision.
-        # Non-plant images are rejected here with a clear message.
-        # ════════════════════════════════════════════════════════
-        if not is_plant_image(image_bytes):
-            return jsonify({
-                "status": "not_a_plant",
-                "message": "No plant leaf detected in the image. Please upload a clear photo of a crop leaf."
-            }), 400
-        # ════════════════════════════════════════════════════════
-
-        # ---- Continue with PIL using the bytes we already read ----
-        import io
-        image = Image.open(io.BytesIO(image_bytes))   # ← NEW: use BytesIO instead of file.stream
+        image = Image.open(io.BytesIO(image_bytes))
         prepared = prepare_image(image)
 
         predictions = MODEL.predict(prepared)
@@ -299,7 +257,7 @@ def predict():
             for i in top3_indices
         ]
 
-        # ---- CONFIDENCE THRESHOLD CHECK (hard block) ----
+        # ---- CONFIDENCE THRESHOLD CHECK (hard block, skips Gemini call entirely) ----
         if confidence < CONFIDENCE_THRESHOLD:
             return jsonify({
                 "status": "low_confidence",
@@ -308,10 +266,20 @@ def predict():
                 "top3": top3
             }), 400
 
-        # ---- GET DISEASE INFO (Gemini first, fallback to JSON) ----
-        disease_info = get_disease_info_gemini(predicted_class, round(confidence * 100, 2))
+        # ---- SINGLE GEMINI CALL: VALIDATE + ENRICH ----
+        gemini_result = analyze_with_gemini(image_bytes, predicted_class, round(confidence * 100, 2))
 
-        if disease_info is None:
+        if gemini_result is not None and gemini_result.get("is_valid_leaf") is False:
+            return jsonify({
+                "status": "not_a_plant",
+                "message": gemini_result.get("rejection_reason") or
+                           "The image doesn't appear to match a valid crop leaf. Please upload a clear photo of a crop leaf."
+            }), 400
+
+        if gemini_result is not None:
+            disease_info = gemini_result
+            disease_source = "gemini"
+        else:
             disease_info = DISEASES.get(predicted_class, {
                 "name": predicted_class.replace("_", " "),
                 "crop": "Unknown",
@@ -321,8 +289,7 @@ def predict():
                 "severity": "Unknown"
             })
             disease_source = "database"
-        else:
-            disease_source = "gemini"
+      
 
         crop_type = disease_info.get("crop", "Unknown")
 
