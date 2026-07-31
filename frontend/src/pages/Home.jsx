@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../AppContext';
-import logo from '../logo/nav logo.png';
+import Navbar from './Navbar';
 
 const crops = [
   { emoji: '🍅', name: 'Tomato', nameNp: 'टमाटर' },
@@ -51,9 +51,6 @@ const text = {
     ctaBottomSub: 'Upload a leaf photo and get AI-powered results in seconds.',
     getStarted: 'Get Started →',
     footer: 'Crop Disease Detector · BCA 8th Semester Final Year Project · Powered by MobileNetV2 + Gemini AI',
-    dashboard: 'View Analytics Dashboard',
-    navHistory: 'History',
-    navDashboard: 'Dashboard',
   },
   np: {
     title: 'बाली रोग पहिचानकर्ता',
@@ -74,9 +71,6 @@ const text = {
     ctaBottomSub: 'पातको फोटो अपलोड गर्नुहोस् र AI-संचालित नतिजा पाउनुहोस्।',
     getStarted: 'सुरु गर्नुहोस् →',
     footer: 'बाली रोग पहिचानकर्ता · BCA ८औं सेमेस्टर अन्तिम वर्ष परियोजना · MobileNetV2 + Gemini AI',
-    dashboard: 'एनालिटिक्स ड्यासबोर्ड हेर्नुहोस्',
-    navHistory: 'इतिहास',
-    navDashboard: 'ड्यासबोर्ड',
   },
 };
 
@@ -90,41 +84,7 @@ function Home() {
   return (
     <div className={`min-h-screen font-sans transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white text-gray-900'}`}>
 
-      {/* Top Bar */}
-<div className={`flex items-center justify-between px-6 py-0 h-14 border-b ${dark ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'}`}>
-
-  {/* Left — Logo */}
-  <div className="flex items-center gap-2.5">
-    <img 
-      src={logo} 
-      alt="CropGuard logo" 
-      className="w-8 h-8 rounded-lg object-contain"
-    />
-    <span className={`text-sm font-semibold ${dark ? 'text-white' : 'text-gray-800'}`}>CropGuard</span>
-  </div>
-
-  {/* Right — Nav + Toggles */}
-  <div className="flex items-center gap-1">
-    <button onClick={() => navigate('/history')}
-      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}>
-      📋 {t.navHistory}
-    </button>
-    <button onClick={() => navigate('/dashboard')}
-      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${dark ? 'text-gray-400 hover:text-green-400 hover:bg-gray-800' : 'text-gray-500 hover:text-green-700 hover:bg-green-50'}`}>
-      📊 {t.navDashboard}
-    </button>
-    <div className={`w-px h-5 mx-1 ${dark ? 'bg-gray-700' : 'bg-gray-200'}`}></div>
-    <button onClick={toggleLang}
-      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-      {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
-    </button>
-    <button onClick={toggleDark}
-      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-      {dark ? '☀️ Light' : '🌙 Dark'}
-    </button>
-  </div>
-
-</div>
+      <Navbar darkMode={dark} toggleDark={toggleDark} language={language} toggleLang={toggleLang} />
 
       {/* Hero */}
       <div className="flex flex-col items-center justify-center text-center px-6 pt-16 pb-12">
@@ -145,7 +105,7 @@ function Home() {
       </div>
 
       {/* How It Works */}
-      <div className={`py-12 px-6 ${dark ? 'bg-gray-800' : 'bg-white'}`}>
+      <div className={`py-16 px-6 ${dark ? 'bg-gray-800' : 'bg-white'}`}>
         <h2 className={`text-2xl font-bold text-center mb-8 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.howTitle}</h2>
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {currentSteps.map((step) => (
@@ -159,7 +119,7 @@ function Home() {
       </div>
 
       {/* Supported Crops */}
-      <div className={`py-12 px-6 ${dark ? 'bg-gray-900' : 'bg-green-50'}`}>
+      <div className={`py-16 px-6 ${dark ? 'bg-gray-900' : 'bg-green-50'}`}>
         <h2 className={`text-2xl font-bold text-center mb-2 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.cropsTitle}</h2>
         <p className={`text-center text-sm mb-8 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.cropsSubtitle}</p>
         <div className="max-w-3xl mx-auto grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
@@ -175,7 +135,7 @@ function Home() {
       </div>
 
       {/* About the Model */}
-      <div className={`py-12 px-6 ${dark ? 'bg-gray-800' : 'bg-white'}`}>
+      <div className={`py-16 px-6 ${dark ? 'bg-gray-800' : 'bg-white'}`}>
         <div className={`max-w-3xl mx-auto rounded-2xl p-8 shadow-sm ${dark ? 'bg-gray-700' : 'bg-green-50'}`}>
           <h2 className={`text-2xl font-bold mb-4 ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.modelTitle}</h2>
           <p className={`text-sm leading-relaxed mb-4 ${dark ? 'text-gray-300' : 'text-gray-600'}`}>{t.modelP1}</p>
@@ -199,7 +159,7 @@ function Home() {
       </div>
 
       {/* Final CTA */}
-      <div className="py-12 px-6 text-center bg-green-700">
+      <div className="py-16 px-6 text-center bg-green-700">
         <h2 className="text-2xl font-bold text-white mb-3">{t.ctaBottom}</h2>
         <p className="text-green-200 mb-6 text-sm">{t.ctaBottomSub}</p>
         <div className="flex flex-col items-center gap-3">
@@ -209,7 +169,6 @@ function Home() {
           >
             {t.getStarted}
           </button>
-          
         </div>
       </div>
 

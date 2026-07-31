@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useApp } from '../AppContext';
+import Navbar from './Navbar';
 
 const API_URL = process.env.REACT_APP_API_URL || 
    'https://padamd3ploy-production.hf.space';
@@ -10,9 +11,7 @@ const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
 const text = {
   en: {
-    back: '← Back to Home',
     title: 'Upload Leaf Photo',
-    navHistory: '📋 History',
     subtitle: 'Upload an existing photo or take one using your camera for instant analysis.',
     dropText: 'Click or drag & drop an image here',
     dropSub: 'Supports JPG, PNG · Max size: 5MB',
@@ -29,9 +28,7 @@ const text = {
     errorBackend: 'Something went wrong. Make sure the backend is running.',
   },
   np: {
-    back: '← गृहपृष्ठमा फर्कनुहोस्',
     title: 'पातको फोटो अपलोड गर्नुहोस्',
-    navHistory: '📋 इतिहास',
     subtitle: 'तत्काल विश्लेषणको लागि फोटो अपलोड गर्नुहोस् वा क्यामेराबाट खिच्नुहोस्।',
     dropText: 'यहाँ क्लिक गर्नुहोस् वा छवि ड्र्याग & ड्रप गर्नुहोस्',
     dropSub: 'JPG, PNG समर्थित · अधिकतम साइज: ५MB',
@@ -69,10 +66,10 @@ function Upload() {
     if (file.size > MAX_SIZE_BYTES) { setError(t.errorSize); return; }
     setImage(file);
     const reader = new FileReader();
-reader.onloadend = () => {
-  setPreview(reader.result); // base64 string — survives navigation
-};
-reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setPreview(reader.result); // base64 string — survives navigation
+    };
+    reader.readAsDataURL(file);
     setError(null);
   };
 
@@ -80,134 +77,130 @@ reader.readAsDataURL(file);
   const handleDrop = (e) => { e.preventDefault(); processFile(e.dataTransfer.files[0]); };
 
   const handleSubmit = async () => {
-
-    //test code
-    // console.log('Submit clicked, image:', image); // ADD THIS
-    // console.log('Image type:', typeof image, image instanceof File);
     if (!image) { setError(t.errorNoImage); return; }
     setLoading(true);
     setError(null);
     const formData = new FormData();
     formData.append('image', image);
     try {
-      
       const response = await axios.post(`${API_URL}/predict`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       navigate('/result', { state: { result: response.data, preview } });
     }
     catch (err) {
-    console.error('Full error:', err);
-    console.error('Response:', err.response);
-    console.error('Status:', err.response?.status);
+      console.error('Full error:', err);
+      console.error('Response:', err.response);
+      console.error('Status:', err.response?.status);
 
-    if (err.response?.data?.status === 'not_a_plant') {
-        setError('No plant leaf detected. Please upload a clear photo of a crop leaf. 🌿');
-    } else if (err.response?.data?.status === 'low_confidence') {
-        setError('Image unclear. Please retake in better lighting.');
-    } else {
-        setError(t.errorBackend);
+      if (err.response?.data?.status === 'not_a_plant') {
+          setError('No plant leaf detected. Please upload a clear photo of a crop leaf. 🌿');
+      } else if (err.response?.data?.status === 'low_confidence') {
+          setError('Image unclear. Please retake in better lighting.');
+      } else {
+          setError(t.errorBackend);
+      }
     }
-}
-     finally {
+    finally {
       setLoading(false);
     }
   };
 
+  const analyzeDisabled = !image || loading;
+
   return (
-    <div className={`min-h-screen px-6 py-12 transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${dark ? 'bg-gray-900 text-white' : 'bg-gradient-to-b from-green-50 to-white'}`}>
 
-      {/* Top Bar */}
-      <div className="flex justify-end gap-2 mb-6">
-        <button onClick={toggleLang} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-          {language === 'en' ? '🇳🇵 नेपाली' : 'EN English'}
-        </button>
-        <button onClick={toggleDark} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-          {dark ? '☀️ Light' : '🌙 Dark'}
-        </button>
-        <button onClick={() => navigate('/history')} className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition ${dark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-600 hover:bg-gray-100'}`}>
-    {t.navHistory}
-  </button>
-      </div>
+      <Navbar darkMode={dark} toggleDark={toggleDark} language={language} toggleLang={toggleLang} />
 
-     
-  <button onClick={() => navigate('/')} className={`text-sm ${dark ? 'text-green-400 hover:text-green-300' : 'text-green-600 hover:text-green-800'}`}>
-    {t.back}
-  </button>
-  
+      <div className="px-6 py-12">
+        <div className="max-w-xl mx-auto">
+          <h1 className={`text-3xl font-bold mb-2 text-center ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.title}</h1>
+          <p className={`text-center text-sm mb-8 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.subtitle}</p>
 
-
-      <div className="max-w-xl mx-auto">
-        <h1 className={`text-3xl font-bold mb-2 text-center ${dark ? 'text-green-400' : 'text-green-800'}`}>{t.title}</h1>
-        <p className={`text-center text-sm mb-8 ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{t.subtitle}</p>
-
-        {/* Drop Zone */}
-        <div
-          onDrop={handleDrop}
-          onDragOver={(e) => e.preventDefault()}
-          onClick={() => fileInputRef.current.click()}
-          className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition duration-200 ${dark ? 'border-green-600 hover:bg-gray-800' : 'border-green-400 hover:bg-green-50'}`}
-        >
-          {preview ? (
-            <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-xl object-contain" />
-          ) : (
-            <>
-              <div className="text-5xl mb-3">📷</div>
-              <p className={`font-medium ${dark ? 'text-green-400' : 'text-green-700'}`}>{t.dropText}</p>
-              <p className={`text-xs mt-1 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.dropSub}</p>
-            </>
-          )}
-        </div>
-
-        <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-        <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
-
-        <div className="flex gap-3 mt-4">
-          <button onClick={() => fileInputRef.current.click()} className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}>
-            {t.gallery}
-          </button>
-          <button onClick={() => cameraInputRef.current.click()} className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}>
-            {t.camera}
-          </button>
-        </div>
-
-        {preview && (
-          <p onClick={() => fileInputRef.current.click()} className={`text-center text-sm mt-3 cursor-pointer hover:underline ${dark ? 'text-green-500' : 'text-green-500'}`}>
-            {t.changePhoto}
-          </p>
-        )}
-
-        {error && (
-          <div className={`mt-4 border text-sm rounded-xl px-4 py-3 ${dark ? 'bg-red-900 border-red-700 text-red-300' : 'bg-red-50 border-red-200 text-red-600'}`}>
-            {error}
+          {/* Drop Zone */}
+          <div
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onClick={() => fileInputRef.current.click()}
+            className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition duration-200 ${dark ? 'border-green-600 hover:bg-gray-800' : 'border-green-400 hover:bg-green-50'}`}
+          >
+            {preview ? (
+              <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-xl object-contain" />
+            ) : (
+              <>
+                <div className="text-5xl mb-3">📷</div>
+                <p className={`font-medium ${dark ? 'text-green-400' : 'text-green-700'}`}>{t.dropText}</p>
+                <p className={`text-xs mt-1 ${dark ? 'text-gray-500' : 'text-gray-400'}`}>{t.dropSub}</p>
+              </>
+            )}
           </div>
-        )}
 
-        {/* Tips */}
-        <div className={`mt-6 border rounded-xl px-5 py-4 ${dark ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-200'}`}>
-          <p className={`font-semibold text-sm mb-2 ${dark ? 'text-yellow-300' : 'text-yellow-800'}`}>{t.tipsTitle}</p>
-          <ul className={`text-xs space-y-1 list-disc list-inside ${dark ? 'text-yellow-400' : 'text-yellow-700'}`}>
-            {t.tips.map((tip, i) => <li key={i}>{tip}</li>)}
-          </ul>
+          <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+          <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
+
+          <div className="flex gap-3 mt-4">
+            <button onClick={() => fileInputRef.current.click()} className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}>
+              {t.gallery}
+            </button>
+            <button onClick={() => cameraInputRef.current.click()} className={`flex-1 border font-medium py-3 rounded-xl transition text-sm ${dark ? 'border-green-600 text-green-400 hover:bg-gray-800' : 'border-green-400 text-green-700 hover:bg-green-50'}`}>
+              {t.camera}
+            </button>
+          </div>
+
+          {preview && (
+            <p onClick={() => fileInputRef.current.click()} className={`text-center text-sm mt-3 cursor-pointer hover:underline ${dark ? 'text-green-500' : 'text-green-500'}`}>
+              {t.changePhoto}
+            </p>
+          )}
+
+          {error && (
+            <div className={`mt-4 border text-sm rounded-xl px-4 py-3 ${dark ? 'bg-red-900 border-red-700 text-red-300' : 'bg-red-50 border-red-200 text-red-600'}`}>
+              {error}
+            </div>
+          )}
+
+          {/* Tips */}
+          <div className={`mt-6 border rounded-xl px-5 py-4 ${dark ? 'bg-yellow-900 border-yellow-700' : 'bg-yellow-50 border-yellow-200'}`}>
+            <p className={`font-semibold text-sm mb-2 ${dark ? 'text-yellow-300' : 'text-yellow-800'}`}>{t.tipsTitle}</p>
+            <ul className={`text-xs space-y-1 list-disc list-inside ${dark ? 'text-yellow-400' : 'text-yellow-700'}`}>
+              {t.tips.map((tip, i) => <li key={i}>{tip}</li>)}
+            </ul>
+          </div>
+
+          {/*
+            Analyze button — contrast fix:
+            The old version used a single Tailwind `disabled:` variant
+            (bg-green-900 / text-green-600) for BOTH light and dark mode.
+            Both of those are dark, muted greens, so in light mode the
+            disabled button was nearly unreadable. Now the disabled
+            state is explicitly branched per theme, using a genuinely
+            neutral gray so it reads as "disabled" rather than "broken".
+          */}
+          <button
+            onClick={handleSubmit}
+            disabled={analyzeDisabled}
+            className={`mt-8 w-full text-lg font-semibold py-4 rounded-2xl shadow transition duration-200 ${
+              analyzeDisabled
+                ? dark
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed shadow-none'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-3">
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                {t.analyzing}
+              </span>
+            ) : (
+              t.analyze
+            )}
+          </button>
         </div>
-
-        <button
-  onClick={handleSubmit}
-  disabled={!image || loading}
-  className="mt-8 w-full bg-green-600 hover:bg-green-700 disabled:bg-green-900 disabled:text-green-600 text-white text-lg font-semibold py-4 rounded-2xl shadow transition duration-200"
->
-  {loading ? (
-    <span className="flex items-center justify-center gap-3">
-      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-      </svg>
-      {t.analyzing}
-    </span>
-  ) : (
-    t.analyze
-  )}
-</button>
       </div>
     </div>
   );
